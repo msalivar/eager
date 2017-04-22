@@ -17,6 +17,8 @@
 #include <OgreSceneNode.h>
 #include <OgreViewport.h>
 #include <SdkTrays.h>
+#include <OgreEntity.h>
+#include <OgreWindowEventUtilities.h>
 
 class GraphicsManager : public Manager
 {
@@ -30,6 +32,11 @@ public:
     void loadLevel() override;
     void stop() override;
 
+	//Ogre variables
+	Ogre::Camera* ogreCamera;
+	Ogre::String resources;
+	Ogre::String plugins;
+	Ogre::ConfigFile cf;
 	Ogre::Root *ogreRoot;
 	Ogre::RenderWindow* ogreRenderWindow;
 	Ogre::SceneManager* ogreSceneManager;
@@ -39,11 +46,6 @@ public:
 	void testScene() const;
 
 private:
-	//Ogre variables
-	Ogre::Camera* ogreCamera;
-	Ogre::String resources;
-	Ogre::String plugins;
-	Ogre::ConfigFile cf;
 	void loadConfig(Ogre::ConfigFile cf) const;
 	void configureRenderSystem() const;
     static void initResources();

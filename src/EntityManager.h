@@ -8,6 +8,10 @@
 #pragma once
 
 #include <list>
+#include <OgreVector3.h>
+#include <OgreSceneManager.h>
+#include <OgreSceneNode.h>
+#include <OgreEntity.h>
 #include "Entity381.h"
 #include "Manager.h"
 
@@ -25,7 +29,11 @@ public:
     void loadLevel() override;
     void stop() override;
 
-private:
-	std::list<Entity381 *> entities_;
+	Entity381 *CreateEntity(EntityType entityType, Ogre::Vector3 pos, float yaw = 0);
+	void CreateOgreEntityAndNode(Entity381 *ent);
+	void SelectNextEntity();
+
+	Entity381* selectedEntity;
+	std::list<Entity381 *> entities;
 
 };

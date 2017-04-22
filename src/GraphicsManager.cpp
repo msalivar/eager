@@ -7,7 +7,9 @@
 
 #include "GraphicsManager.h"
 #include "Engine.h"
-GraphicsManager::GraphicsManager(Engine *eng): Manager(eng) {
+
+GraphicsManager::GraphicsManager(Engine *eng): Manager(eng)
+{
 
 #ifdef _DEBUG
 	resources = "resources_d.cfg";
@@ -22,7 +24,7 @@ GraphicsManager::GraphicsManager(Engine *eng): Manager(eng) {
 	cf.load(resources);
 	loadConfig(cf);
 	configureRenderSystem();
-	ogreRenderWindow = ogreRoot->initialise(true, "Matthew Berger - CS381 Game Engine");
+	ogreRenderWindow = ogreRoot->initialise(true, "Team 7 - CS381 Game Engine");
 	createSceneManager();
 	initResources();
 	createCamera();
@@ -53,18 +55,21 @@ void GraphicsManager::configureRenderSystem() const
 		engine->stop();
 }
 
-void GraphicsManager::initResources(){
+void GraphicsManager::initResources()
+{
 	Ogre::TextureManager::getSingleton().setDefaultNumMipmaps(5);
 	Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
 }
 
-void GraphicsManager::createSceneManager(){
+void GraphicsManager::createSceneManager()
+{
 	ogreSceneManager = ogreRoot->createSceneManager(Ogre::ST_GENERIC);
     overlaySystem = new Ogre::OverlaySystem();
     ogreSceneManager->addRenderQueueListener(overlaySystem);
 }
 
-void GraphicsManager::createCamera(){
+void GraphicsManager::createCamera()
+{
 	ogreCamera = ogreSceneManager->createCamera("MainCam");
 	ogreCamera->setPosition(0, 0, 0);
 	ogreCamera->setNearClipDistance(5);
@@ -76,7 +81,8 @@ void GraphicsManager::createCamera(){
 
 }
 
-void GraphicsManager::createViewport(){
+void GraphicsManager::createViewport()
+{
 	ogreViewport = ogreRenderWindow->addViewport(ogreCamera);
 	ogreViewport->setBackgroundColour(Ogre::ColourValue(0, 0, 0));
 	ogreCamera->setAspectRatio(Ogre::Real(ogreViewport->getActualWidth()) /
@@ -94,27 +100,27 @@ void GraphicsManager::testScene() const
 	std::cout << "Test scene done" << std::endl;
 }
 
-
-
-
-GraphicsManager::~GraphicsManager() {
+GraphicsManager::~GraphicsManager()
+{
 	delete ogreRoot; //after inputManager destructor
 }
 
-void GraphicsManager::init(){
-	testScene();
+void GraphicsManager::init()
+{
 }
 
-void GraphicsManager::loadLevel(){
+void GraphicsManager::loadLevel()
+{
 
 }
 
-
-void GraphicsManager::tick(float dt){
+void GraphicsManager::tick(float dt)
+{
 	Ogre::WindowEventUtilities::messagePump();
 	if(!ogreRoot->renderOneFrame()) engine->stop();
 }
 
-void GraphicsManager::stop(){
+void GraphicsManager::stop()
+{
 	ogreRoot->shutdown();
 }

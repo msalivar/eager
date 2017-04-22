@@ -8,10 +8,15 @@
 #pragma once
 
 #include "Manager.h"
-
+#include <OgreMeshManager.h>
 
 class GameManager : public Manager
 {
+private:
+	void createEnts();
+	void createSky();
+	void createGround();
+
 public:
     explicit GameManager(Engine *engine);
 	~GameManager();
@@ -20,4 +25,6 @@ public:
     void tick(float dt) override;
     void loadLevel() override;
     void stop() override;
+
+	Ogre::Plane ocean;
 };
