@@ -15,12 +15,10 @@ GameManager::GameManager(Engine *engine): Manager(engine)
 
 GameManager::~GameManager()
 {
-
 }
 
 void GameManager::init()
 {
-
 }
 
 void GameManager::loadLevel()
@@ -37,12 +35,10 @@ void GameManager::loadLevel()
 
 void GameManager::stop()
 {
-
 }
 
 void GameManager::tick(float dt)
 {
-
 }
 
 void GameManager::createEnts()

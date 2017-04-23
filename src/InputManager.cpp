@@ -130,6 +130,7 @@ bool InputManager::keyPressed(const OIS::KeyEvent &arg)
 	//std::cout << "Key Pressed: " << arg.key << std::endl;
 	return true;
 }
+
 bool InputManager::keyReleased(const OIS::KeyEvent &arg)
 {
 	//std::cout << "Key Released: " << arg.key << std::endl;
@@ -139,10 +140,12 @@ bool InputManager::keyReleased(const OIS::KeyEvent &arg)
 	}
 	return true;
 }
+
 bool InputManager::mouseMoved(const OIS::MouseEvent &arg)
 {
     return true;
 }
+
 bool InputManager::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 {
 	if (id == OIS::MB_Left)
@@ -156,6 +159,7 @@ bool InputManager::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID i
 	}
 	return true;
 }
+
 bool InputManager::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 {
     return true;
@@ -297,8 +301,6 @@ void InputManager::CommandMoveTo(Ogre::Vector3 position)
 void InputManager::UpdateCamera(float dt)
 {
 	float move = 100.0f;
-	float rotate = 0.1f;
-
 	Ogre::Vector3 dirVec = Ogre::Vector3::ZERO;
 
 	if (keyboard->isKeyDown(OIS::KC_W))
@@ -307,30 +309,19 @@ void InputManager::UpdateCamera(float dt)
 	if (keyboard->isKeyDown(OIS::KC_S))
 		dirVec.z += move;
 
+	if (keyboard->isKeyDown(OIS::KC_A))
+		dirVec.x -= move;
+
+	if (keyboard->isKeyDown(OIS::KC_D))
+		dirVec.x += move;
+
 	if (keyboard->isKeyDown(OIS::KC_E))
 		dirVec.y += move;
 
-	if (keyboard->isKeyDown(OIS::KC_F))
+	if (keyboard->isKeyDown(OIS::KC_Q))
 		dirVec.y -= move;
 
-	if (keyboard->isKeyDown(OIS::KC_A))
-	{
-		if (keyboard->isKeyDown(OIS::KC_LSHIFT))
-			engine->graphicsManager->cameraNode->yaw(Ogre::Degree(5 * rotate));
-		else
-			dirVec.x -= move;
-	}
-
-	if (keyboard->isKeyDown(OIS::KC_D))
-	{
-		if (keyboard->isKeyDown(OIS::KC_LSHIFT))
-			engine->graphicsManager->cameraNode->yaw(Ogre::Degree(-5 * rotate));
-		else
-			dirVec.x += move;
-	}
-
 	engine->graphicsManager->cameraNode->translate(dirVec * dt, Ogre::Node::TS_LOCAL);
-
 }
 
 void InputManager::UpdateDesiredSpeedHeading(float dt)
@@ -345,7 +336,6 @@ void InputManager::UpdateDesiredSpeedHeading(float dt)
 			engine->entityManager->selectedEntity->stopCommands = true;
 		}
 	}
-
 }
 
 void InputManager::UpdateSelection(float dt)
