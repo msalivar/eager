@@ -132,7 +132,7 @@ bool InputManager::keyPressed(const OIS::KeyEvent &arg)
 }
 bool InputManager::keyReleased(const OIS::KeyEvent &arg)
 {
-	//std::cout << "Checking key release" << std::endl;
+	//std::cout << "Key Released: " << arg.key << std::endl;
 	if (arg.key == OIS::KC_TAB)
 	{
 		engine->entityManager->SelectNextEntity();
@@ -145,19 +145,19 @@ bool InputManager::mouseMoved(const OIS::MouseEvent &arg)
 }
 bool InputManager::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 {
-    return true;
+	if (id == OIS::MB_Left)
+	{
+		//std::cout << "Left mouse pressed" << std::endl;
+		HandleSingleSelection();
+	}
+	else if (id == OIS::MB_Right)
+	{
+		HandleCommand();
+	}
+	return true;
 }
 bool InputManager::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 {
-    return true;
-}
-
-bool InputManager::frameRenderingQueued(const Ogre::FrameEvent& evt)
-{
-    keyboard->capture();
-    mouse->capture();
-    //trayManager->frameRenderingQueued(evt);
-    //trayManager->refreshCursor();
     return true;
 }
 
@@ -256,7 +256,8 @@ void InputManager::AddOrSetCommand(Entity381* entity, Command *com)
 			{
 				unitAI->AddCommand(com);
 			}
-			else {
+			else
+			{
 				unitAI->SetCommand(com);
 			}
 			break;
@@ -338,34 +339,11 @@ void InputManager::UpdateDesiredSpeedHeading(float dt)
 
 	if (engine->entityManager->selectedEntity)
 	{
-
-		if ((keyboardTimer < 0) && keyboard->isKeyDown(OIS::KC_NUMPAD8))
+		if ((keyboardTimer < 0) && keyboard->isKeyDown(OIS::KC_S))
 		{
 			keyboardTimer = keyTime;
-			engine->entityManager->selectedEntity->desiredSpeed += 10;
+			engine->entityManager->selectedEntity->stopCommands = true;
 		}
-		if ((keyboardTimer < 0) && keyboard->isKeyDown(OIS::KC_NUMPAD2))
-		{
-			keyboardTimer = keyTime;
-			engine->entityManager->selectedEntity->desiredSpeed -= 10;
-		}
-		engine->entityManager->selectedEntity->desiredSpeed =
-			std::max(engine->entityManager->selectedEntity->minSpeed,
-				std::min(engine->entityManager->selectedEntity->maxSpeed,
-					engine->entityManager->selectedEntity->desiredSpeed));
-
-
-		if ((keyboardTimer < 0) && keyboard->isKeyDown(OIS::KC_NUMPAD4))
-		{
-			keyboardTimer = keyTime;
-			engine->entityManager->selectedEntity->desiredHeading -= 0.3f;
-		}
-		if ((keyboardTimer < 0) && keyboard->isKeyDown(OIS::KC_NUMPAD6))
-		{
-			keyboardTimer = keyTime;
-			engine->entityManager->selectedEntity->desiredHeading += 0.3f;
-		}
-		//entityManager->selectedEntity->desiredHeading = FixAngle(entityManager->selectedEntity->desiredHeading);
 	}
 
 }

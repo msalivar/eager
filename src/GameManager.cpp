@@ -30,9 +30,9 @@ void GameManager::loadLevel()
 	Ogre::Light* light = engine->graphicsManager->ogreSceneManager->createLight("MainLight");
 	light->setPosition(20.0, 80.0, 50.0);
 
-	createEnts();
-	createSky();
 	createGround();
+	createSky();
+	createEnts();
 }
 
 void GameManager::stop()
@@ -48,20 +48,11 @@ void GameManager::tick(float dt)
 void GameManager::createEnts()
 {
 	Entity381 * ent;
-	int x = 0;
-	ent = engine->entityManager->CreateEntity(EntityType::DDG, Ogre::Vector3(x, 0, 0), 0);
+	ent = engine->entityManager->CreateEntity(EntityType::DDG, Ogre::Vector3(0, 0, 0), 4.71239f);
 	std::cout << "Created: " << ent->meshfile << std::endl;
-	x = x + 200;
-	ent = engine->entityManager->CreateEntity(EntityType::CIGARETTE, Ogre::Vector3(x, 0, 0), 0);
+	ent = engine->entityManager->CreateEntity(EntityType::CIGARETTE, Ogre::Vector3(-200, 0, 0), 4.71239f);
 	std::cout << "Created: " << ent->meshfile << std::endl;
-	x = x + 200;
-	ent = engine->entityManager->CreateEntity(EntityType::ALIEN, Ogre::Vector3(x, 0, 0), 0);
-	std::cout << "Created: " << ent->meshfile << std::endl;
-	x = x + 200;
-	ent = engine->entityManager->CreateEntity(EntityType::CVN, Ogre::Vector3(x, 0, 0), 0);
-	std::cout << "Created: " << ent->meshfile << std::endl;
-	x = x + 300;
-	ent = engine->entityManager->CreateEntity(EntityType::FRIGATE, Ogre::Vector3(x, 0, 0), 0);
+	ent = engine->entityManager->CreateEntity(EntityType::FRIGATE, Ogre::Vector3(200, 0, 0), 4.71239f);
 	std::cout << "Created: " << ent->meshfile << std::endl;
 	
 	engine->entityManager->selectedEntity = ent;

@@ -9,6 +9,8 @@
 #include <math.h>
 #include <OgreMath.h>
 
+ // COMMAND //
+
 Command::Command(Entity381 *ent, COMMAND_TYPE ct){
 	entity = ent;
 	commandType = ct;
@@ -30,67 +32,80 @@ bool Command::done(){
 	return true;
 }
 
+// MOVETO //
 
-MoveTo::MoveTo(Entity381 * ent, Ogre::Vector3 location): Command(ent, COMMAND_TYPE::MOVETO){
+MoveTo::MoveTo(Entity381 * ent, Ogre::Vector3 location): Command(ent, COMMAND_TYPE::MOVETO)
+{
 	targetLocation = location;
-	MOVE_DISTANCE_THRESHOLD = 100;
+	MOVE_DISTANCE_THRESHOLD = 110;
 }
 
-MoveTo::~MoveTo(){
-
+MoveTo::~MoveTo()
+{
 }
 
-void MoveTo::init(){
+void MoveTo::init()
+{
 	Ogre::Vector3 diff = targetLocation - entity->pos;
 	entity->desiredHeading  = atan2(diff.z, diff.x);
 	entity->desiredSpeed = entity->maxSpeed;
 }
 
-bool MoveTo::done(){
+bool MoveTo::done()
+{
 	Ogre::Vector3 diff = targetLocation - entity->pos;
-	if (diff.length() < MOVE_DISTANCE_THRESHOLD){
+	if (diff.length() < MOVE_DISTANCE_THRESHOLD)
 		return true;
-	} else {
+	else
 		return false;
-	}
 }
 
-void MoveTo::tick(float dt){
-	if(done()){
+void MoveTo::tick(float dt)
+{
+	if(done())
+	{
 		entity->desiredSpeed = 0;
-	} else {
+	}
+	else
+	{
 		Ogre::Vector3 diff = targetLocation - entity->pos;
 		entity->desiredHeading  = atan2(diff.z, diff.x);
 		entity->desiredSpeed = entity->maxSpeed;
 	}
 }
 
-Follow::Follow(Entity381 *ent, Entity381* targ): Command(ent, COMMAND_TYPE::FOLLOW){
+// FOLLOW //
+
+Follow::Follow(Entity381 *ent, Entity381* targ): Command(ent, COMMAND_TYPE::FOLLOW)
+{
 	target = targ;
-	this->FOLLOW_DISTANCE = 100;
+	this->FOLLOW_DISTANCE = 200;
 }
 
-Follow::~Follow(){
-
+Follow::~Follow()
+{
 }
 
-
-Ogre::Vector3 Follow::ComputeTargetLocation(){
+Ogre::Vector3 Follow::ComputeTargetLocation()
+{
 	float behind = target->heading + Ogre::Math::PI;
 	return target->pos + Ogre::Vector3 (FOLLOW_DISTANCE * cos(behind), 0, FOLLOW_DISTANCE * sin(behind));
 }
 
-void Follow::init(){
+void Follow::init()
+{
 	Ogre::Vector3 diff = ComputeTargetLocation() - entity->pos;
 	entity->desiredHeading = atan2(diff.z, diff.x);
 	entity->desiredSpeed = entity->maxSpeed;
 }
 
-bool Follow::done(){
+bool Follow::done()
+{
 	return false;
 }
 
-void Follow::tick(float dt){
+void Follow::tick(float dt)
+{
 	//compute offset
 	Ogre::Vector3 diff = ComputeTargetLocation() - entity->pos;
 	entity->desiredHeading = atan2(diff.z, diff.x);
@@ -101,17 +116,19 @@ void Follow::tick(float dt){
 	}
 }
 
+// INTERCEPT //
 
-
-Intercept::Intercept(Entity381 * ent, Entity381 * target): Follow(ent, target) {
+Intercept::Intercept(Entity381 * ent, Entity381 * target): Follow(ent, target)
+{
 
 }
 
-Intercept::~Intercept(){
+Intercept::~Intercept()
+{
 }
 
-Ogre::Vector3 Intercept::ComputeInterceptLocation(){
-
+Ogre::Vector3 Intercept::ComputeInterceptLocation()
+{
 	Ogre::Vector3 diff             = target->pos - entity->pos;
 	Ogre::Vector3 relativeVelocity = target->vel - entity->vel;
 	Ogre::Vector3 targetLocation   = target->pos;
@@ -125,28 +142,27 @@ Ogre::Vector3 Intercept::ComputeInterceptLocation(){
 	return targetLocation;
 }
 
-void Intercept::runIntercept(){
+void Intercept::runIntercept()
+{
 	Ogre::Vector3 diff = ComputeInterceptLocation() - entity->pos;
 	entity->desiredHeading = atan2(diff.z, diff.x);
 	entity->desiredSpeed = entity->maxSpeed;
 }
 
-void Intercept::init(void){
+void Intercept::init(void)
+{
 	runIntercept();
 }
 
-bool Intercept::done(){
+bool Intercept::done()
+{
 	return ((entity->pos - target->pos).length() < 0.5f);
 }
 
-void Intercept::tick(float dt){
+void Intercept::tick(float dt)
+{
 	runIntercept();
 }
 
-
-
-
-
-
-
+// ATTACK //
 

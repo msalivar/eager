@@ -26,6 +26,11 @@ void UnitAI::Tick(float dt)
 {
 	if (!commands.empty())
 	{
+		if (this->entity->stopCommands)
+		{
+			commands.clear();
+			return;
+		}
 		commands.front()->tick(dt);
 		if (commands.front()->done())
 		{

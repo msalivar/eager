@@ -54,8 +54,6 @@ protected:
     bool mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id) override;
     bool mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id) override;
 
-    bool frameRenderingQueued(const Ogre::FrameEvent& evt) override;
-
 public:
     explicit InputManager(Engine *engine);
 	~InputManager(){}

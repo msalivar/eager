@@ -24,6 +24,7 @@ Entity381::Entity381(EntityType entType, Ogre::Vector3 pos, float heading)
 	Renderable *r = new Renderable(this);
 	Physics *p = new Physics(this);
 	UnitAI *ai = new UnitAI(this);
+	stopCommands = false;
 
 	this->aspects.push_front(r);
 	this->aspects.push_front(p);
@@ -55,7 +56,7 @@ void Entity381::DefaultInit()
 	this->maxSpeed = 100;
 	this->minSpeed = 0;
 
-	this->desiredHeading = 0;
+	this->desiredHeading = this->heading;
 	this->desiredSpeed = 0;
 
 	this->meshfile = "cube.mesh";

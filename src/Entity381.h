@@ -38,6 +38,7 @@ public:
 	//Engine stuff dynamic
 	float speed, heading;
 	float desiredSpeed, desiredHeading;
+	bool stopCommands;
 
 	//selection
 	bool isSelected;

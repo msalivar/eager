@@ -61,9 +61,9 @@ Physics::~Physics()
 void Physics::Tick(float dt)
 {
 	if (entity->speed < entity->desiredSpeed)
-		entity->speed += entity->acceleration *dt;
+		entity->speed += entity->acceleration * dt;
 	if (entity->speed > entity->desiredSpeed)
-		entity->speed -= entity->acceleration *dt;
+		entity->speed -= entity->acceleration * dt * 2;
 
 	//entity->speed = std::max(entity->minSpeed, std::min(entity->speed, entity->maxSpeed)); //clamp
 
