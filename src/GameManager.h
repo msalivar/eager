@@ -9,6 +9,7 @@
 
 #include "Manager.h"
 #include <OgreMeshManager.h>
+#include "Entity381.h"
 
 class GameManager : public Manager
 {
@@ -27,4 +28,8 @@ public:
     void stop() override;
 
 	Ogre::Plane ocean;
+	Entity381* blueTank;
+	Entity381* blueTurret;
+	Entity381* redTank;
+	Entity381* redTurret;
 };

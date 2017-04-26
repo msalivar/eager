@@ -18,9 +18,10 @@
 
 InputManager::InputManager(Engine *engine) : Manager(engine)
 {
-	keyTime = 0.2f;
+	keyTime = 0.05f;
 	selectionTime = 0.2f;
-	keyboardTimer = keyTime;
+	pOneKeyboardTimer = keyTime;
+	pTwoKeyboardTimer = keyTime;
 	selectionTimer = selectionTime;
 	selectionDistanceSquaredThreshold = 10000;
 
@@ -90,7 +91,7 @@ void InputManager::tick(float dt)
 		engine->stop();
 
 	UpdateCamera(dt);
-	UpdateDesiredSpeedHeading(dt);
+	UpdateLocations(dt);
 	//UpdateSelection(dt);
 }
 
@@ -125,35 +126,113 @@ void InputManager::windowClosed(Ogre::RenderWindow* rw)
     }
 }
 
-bool InputManager::keyPressed(const OIS::KeyEvent &arg)
+bool InputManager::UpdateLocations(float dt)
 {
-	//std::cout << "Key Pressed: " << arg.key << std::endl;
-	return true;
-}
+	float moveSpeed = 4;
+	float turnSpeed = 0.02f;
 
-bool InputManager::keyReleased(const OIS::KeyEvent &arg)
-{
-	//std::cout << "Key Released: " << arg.key << std::endl;
-	/*if (arg.key == OIS::KC_TAB)
+	pOneKeyboardTimer -= dt;
+	pTwoKeyboardTimer -= dt;	
+
+	// PLAYER 1
+	if((pOneKeyboardTimer < 0) && keyboard->isKeyDown(OIS::KC_W))
 	{
-		engine->entityManager->SelectNextEntity();
-	}*/
+		pOneKeyboardTimer = keyTime;
+		engine->gameManager->blueTank->desiredSpeed += moveSpeed;
+	}
+	if((pOneKeyboardTimer < 0) && keyboard->isKeyDown(OIS::KC_A))
+	{
+		pOneKeyboardTimer = keyTime;
+		engine->gameManager->blueTank->heading -= turnSpeed;	
+
+	}
+	if((pOneKeyboardTimer < 0) && keyboard->isKeyDown(OIS::KC_S))
+	{
+		pOneKeyboardTimer = keyTime;
+		engine->gameManager->blueTank->desiredSpeed -= moveSpeed;	
+	}
+	if((pOneKeyboardTimer < 0) && keyboard->isKeyDown(OIS::KC_D))
+	{
+		pOneKeyboardTimer = keyTime;
+		engine->gameManager->blueTank->heading += turnSpeed;
+		
+	}
+	if((pOneKeyboardTimer < 0) && keyboard->isKeyDown(OIS::KC_Y))
+	{
+		pOneKeyboardTimer = keyTime;
+		
+	}
+	if((pOneKeyboardTimer < 0) && keyboard->isKeyDown(OIS::KC_G))
+	{
+		pOneKeyboardTimer = keyTime;
+		engine->gameManager->blueTurret->heading -= turnSpeed;
+	}
+	if((pOneKeyboardTimer < 0) && keyboard->isKeyDown(OIS::KC_J))
+	{
+		pOneKeyboardTimer = keyTime;
+		engine->gameManager->blueTurret->heading += turnSpeed;
+		
+	}
+	// PLAYER 2
+	if((pTwoKeyboardTimer < 0) && keyboard->isKeyDown(OIS::KC_UP))
+	{
+		pTwoKeyboardTimer = keyTime;
+		engine->gameManager->redTank->desiredSpeed += moveSpeed;
+		
+	}
+	if((pTwoKeyboardTimer < 0) && keyboard->isKeyDown(OIS::KC_LEFT))
+	{
+		pTwoKeyboardTimer = keyTime;
+		engine->gameManager->redTank->heading -= turnSpeed;	
+		
+	}
+	if((pTwoKeyboardTimer < 0) && keyboard->isKeyDown(OIS::KC_DOWN))
+	{
+		pTwoKeyboardTimer = keyTime;
+		engine->gameManager->redTank->desiredSpeed -= moveSpeed;
+		
+	}
+	if((pTwoKeyboardTimer < 0) && keyboard->isKeyDown(OIS::KC_RIGHT))
+	{
+		pTwoKeyboardTimer = keyTime;
+		engine->gameManager->redTank->heading += turnSpeed;	
+		
+	}
+	if((pTwoKeyboardTimer < 0) && keyboard->isKeyDown(OIS::KC_NUMPAD8))
+	{
+		pTwoKeyboardTimer = keyTime;
+		
+	}
+	if((pTwoKeyboardTimer < 0) && keyboard->isKeyDown(OIS::KC_NUMPAD4))
+	{
+		pTwoKeyboardTimer = keyTime;
+		engine->gameManager->redTurret->heading -= turnSpeed;
+		
+	}
+	if((pTwoKeyboardTimer < 0) && keyboard->isKeyDown(OIS::KC_NUMPAD6))
+	{
+		pTwoKeyboardTimer = keyTime;
+		engine->gameManager->redTurret->heading += turnSpeed;
+		
+	}
+
 	return true;
 }
 
-bool InputManager::mouseMoved(const OIS::MouseEvent &arg)
-{
-    return true;
-}
-
-bool InputManager::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
-{
+bool InputManager::keyPressed(const OIS::KeyEvent &arg) {
 	return true;
 }
-
-bool InputManager::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
-{
-    return true;
+bool InputManager::keyReleased(const OIS::KeyEvent &arg){
+	return true;
+}
+bool InputManager::mouseMoved(const OIS::MouseEvent &arg){
+	return true;
+}
+bool InputManager::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id) {
+	return true;
+}
+bool InputManager::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id){
+	return true;
 }
 
 // Game specific input handling
@@ -162,28 +241,23 @@ void InputManager::UpdateCamera(float dt)
 	float move = 100.0f;
 	Ogre::Vector3 dirVec = Ogre::Vector3::ZERO;
 
-	if (keyboard->isKeyDown(OIS::KC_W))
+	if (keyboard->isKeyDown(OIS::KC_1))
 		dirVec.z -= move;
 
-	if (keyboard->isKeyDown(OIS::KC_S))
+	if (keyboard->isKeyDown(OIS::KC_2))
 		dirVec.z += move;
 
-	if (keyboard->isKeyDown(OIS::KC_A))
+	if (keyboard->isKeyDown(OIS::KC_3))
 		dirVec.x -= move;
 
-	if (keyboard->isKeyDown(OIS::KC_D))
+	if (keyboard->isKeyDown(OIS::KC_4))
 		dirVec.x += move;
 
-	if (keyboard->isKeyDown(OIS::KC_E))
+	if (keyboard->isKeyDown(OIS::KC_5))
 		dirVec.y += move;
 
-	if (keyboard->isKeyDown(OIS::KC_Q))
+	if (keyboard->isKeyDown(OIS::KC_6))
 		dirVec.y -= move;
 
 	engine->graphicsManager->cameraNode->translate(dirVec * dt, Ogre::Node::TS_LOCAL);
-}
-
-void InputManager::UpdateDesiredSpeedHeading(float dt)
-{
-	//keyboardTimer -= dt;
 }
