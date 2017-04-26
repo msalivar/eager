@@ -43,65 +43,40 @@ void EntityManager::CreateOgreEntityAndNode(Entity381 *ent)
 	if (ent)
 	{
 		ent->ogreEntity = engine->graphicsManager->ogreSceneManager->createEntity(ent->meshfile);
-		ent->ogreSceneNode = engine->graphicsManager->ogreSceneManager->getRootSceneNode()->createChildSceneNode(ent->pos);
+		ent->ogreSceneNode = 
+			engine->graphicsManager->ogreSceneManager->getRootSceneNode()->createChildSceneNode(ent->pos);
 		ent->ogreSceneNode->attachObject(ent->ogreEntity);
-		ent->ogreSceneNode->yaw(Ogre::Radian(ent->heading));
 	}
 
 }
 
-Entity381* EntityManager::CreateEntity(EntityType entityType, Ogre::Vector3 position, float heading)
+Entity381* EntityManager::CreateEntity(EntityType entityType, Ogre::Vector3 position)
 {
 
-	Entity381 *ent = 0;// = new Entity381(entityType, position, heading);
+	Entity381 *ent = 0;
 	switch (entityType)
 	{
-	case EntityType::ALIEN:
-		ent = new Alien(position, heading);
+	case EntityType::BLUETANK:
+		ent = new BlueTank(position);
 		break;
-	case EntityType::CIGARETTE:
-		ent = new Cigarette(position, heading);
+	case EntityType::BLUETURRET:
+		ent = new BlueTurret(position);
 		break;
-	case EntityType::DDG:
-		ent = new Ddg(position, heading);
+	case EntityType::REDTANK:
+		ent = new RedTank(position);
 		break;
-	case EntityType::CVN:
-		ent = new Cvn(position, heading);
+	case EntityType::REDTURRET:
+		ent = new RedTurret(position);
 		break;
-	case EntityType::FRIGATE:
-		ent = new Frigate(position, heading);
+	case EntityType::BULLET:
+		ent = new Bullet(position);
 		break;
 	default:
-		ent = new Ddg(position, heading);
+		ent = new Bullet(position);
 		break;
 	}
 
 	CreateOgreEntityAndNode(ent);
 	entities.push_front(ent);
 	return ent;
-}
-
-void EntityManager::SelectNextEntity()
-{
-	int n = 0;
-
-	for (std::list<Entity381 *>::const_iterator it = entities.begin(); it != entities.end(); ++it)
-	{
-		n++;
-		if ((*it)->isSelected) {
-			(*it)->isSelected = false;
-			it++;
-			if (it == entities.end()) {
-				std::cout << "End of ents" << std::endl;
-				selectedEntity = *(entities.begin());
-			}
-			else {
-				selectedEntity = *it;
-				std::cout << "End of ents" << std::endl;
-			}
-			selectedEntity->isSelected = true;
-			break;
-		}
-	}
-
 }

@@ -3,11 +3,11 @@
 
 
 enum class EntityType {
-	DDG,
-	CVN,
-	FRIGATE,
-	CIGARETTE,
-	ALIEN
+	BLUETANK,
+	BLUETURRET,
+	REDTANK,
+	REDTURRET,
+	BULLET
 };
 
 enum class COMMAND_TYPE {

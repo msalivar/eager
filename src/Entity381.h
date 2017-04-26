@@ -17,7 +17,7 @@ class Aspect;
 class Entity381 {
 	
 public:
-	Entity381(EntityType entityType, Ogre::Vector3 pos, float heading);
+	Entity381(EntityType entityType, Ogre::Vector3 pos);
 	~Entity381();
 	void Tick(float dt);
 	void DefaultInit();
@@ -48,38 +48,41 @@ public:
 	std::list<Aspect*> aspects;
 };
 
-class Ddg : public Entity381 {
+class BlueTank : public Entity381 {
 
 public:
-	Ddg(Ogre::Vector3 pos, float heading);
-	~Ddg();
+	BlueTank(Ogre::Vector3 pos);
+	~BlueTank();
 
 };
 
-class Cigarette : public Entity381 {
+class RedTank : public Entity381 {
 
 public:
-	Cigarette(Ogre::Vector3 pos, float heading);
-	~Cigarette();
+	RedTank(Ogre::Vector3 pos);
+	~RedTank();
+
 };
 
-class Alien : public Entity381 {
+class BlueTurret : public Entity381 {
 
 public:
-	Alien(Ogre::Vector3 pos, float heading);
-	~Alien();
+	BlueTurret(Ogre::Vector3 pos);
+	~BlueTurret();
+
 };
 
-class Cvn : public Entity381 {
+class RedTurret : public Entity381 {
 
 public:
-	Cvn(Ogre::Vector3 pos, float heading);
-	~Cvn();
+	RedTurret(Ogre::Vector3 pos);
+	~RedTurret();
+
 };
 
-class Frigate : public Entity381 {
+class Bullet : public Entity381 {
 
 public:
-	Frigate(Ogre::Vector3 pos, float heading);
-	~Frigate();
+	Bullet(Ogre::Vector3 pos);
+	~Bullet();
 };

@@ -11,7 +11,7 @@
 
 int Entity381::nextId = 0;
 
-Entity381::Entity381(EntityType entType, Ogre::Vector3 pos, float heading)
+Entity381::Entity381(EntityType entType, Ogre::Vector3 pos)
 {
 	entityType = entType;
 	this->pos = pos;
@@ -63,62 +63,52 @@ void Entity381::DefaultInit()
 
 }
 
-Ddg::Ddg(Ogre::Vector3 pos, float heading) : Entity381(EntityType::DDG, pos, heading)
+BlueTank::BlueTank(Ogre::Vector3 pos) : Entity381(EntityType::BLUETANK, pos)
 {
-	this->meshfile = "ddg51.mesh";
-	this->acceleration = 1.0f;
-	this->turnRate = 0.1f;
+	this->meshfile = "blueTank.mesh";
 	this->maxSpeed = 35;
 }
 
-Ddg::~Ddg() 
+BlueTank::~BlueTank()
 {
 }
 
-Cigarette::Cigarette(Ogre::Vector3 pos, float heading) : Entity381(EntityType::CIGARETTE, pos, heading)
+RedTank::RedTank(Ogre::Vector3 pos) : Entity381(EntityType::REDTANK, pos)
+{
+	this->meshfile = "redTank.mesh";
+	this->maxSpeed = 35;
+}
+
+RedTank::~RedTank()
+{
+}
+
+BlueTurret::BlueTurret(Ogre::Vector3 pos) : Entity381(EntityType::BLUETURRET, pos)
+{
+	this->meshfile = "blueTurret.mesh";
+	this->maxSpeed = 10;
+}
+
+BlueTurret::~BlueTurret()
+{
+}
+
+RedTurret::RedTurret(Ogre::Vector3 pos) : Entity381(EntityType::REDTURRET, pos)
+{
+	this->meshfile = "redTurret.mesh";
+	this->maxSpeed = 10;
+}
+
+RedTurret::~RedTurret()
+{
+}
+
+Bullet::Bullet(Ogre::Vector3 pos) : Entity381(EntityType::BULLET, pos)
 {
 	this->meshfile = "cigarette.mesh";
-	this->acceleration = 1.5f;
-	this->turnRate = 0.3f;
 	this->maxSpeed = 30;
 }
 
-Cigarette::~Cigarette()
-{
-}
-
-Alien::Alien(Ogre::Vector3 pos, float heading) : Entity381(EntityType::ALIEN, pos, heading)
-{
-	this->meshfile = "alienship.mesh";
-	this->turnRate = 0.5f;
-	this->acceleration = 1.8f;
-	this->maxSpeed = 40;
-}
-
-Alien::~Alien()
-{
-}
-
-Cvn::Cvn(Ogre::Vector3 pos, float heading) : Entity381(EntityType::CVN, pos, heading)
-{
-	this->meshfile = "cvn68.mesh";
-	this->turnRate = 0.05f;
-	this->acceleration = 0.75f;
-	this->maxSpeed = 40;
-}
-
-Cvn::~Cvn()
-{
-}
-
-Frigate::Frigate(Ogre::Vector3 pos, float heading) : Entity381(EntityType::FRIGATE, pos, heading)
-{
-	this->meshfile = "sleek.mesh";
-	this->turnRate = 0.15f;
-	this->acceleration = 1.1f;
-	this->maxSpeed = 25;
-}
-
-Frigate::~Frigate()
+Bullet::~Bullet()
 {
 }

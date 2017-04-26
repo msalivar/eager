@@ -27,15 +27,6 @@ public Ogre::FrameListener
 private:
 	void UpdateCamera(float dt);
 	void UpdateDesiredSpeedHeading(float dt);
-	void UpdateSelection(float dt);
-	void HandleSingleSelection();
-	void HandleCommand();
-	Ogre::Vector3 GetPositionUnderMouse();
-	Entity381* GetClosestEntityToPosition(Ogre::Vector3 position);
-	void CommandMoveTo(Ogre::Vector3 position);
-	void CommandFollow(Entity381* entity);
-	void CommandIntercept(Entity381* entity);
-	void AddOrSetCommand(Entity381* ent, Command* command);
 
 	float keyboardTimer;
 	float selectionTimer;

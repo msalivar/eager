@@ -134,10 +134,10 @@ bool InputManager::keyPressed(const OIS::KeyEvent &arg)
 bool InputManager::keyReleased(const OIS::KeyEvent &arg)
 {
 	//std::cout << "Key Released: " << arg.key << std::endl;
-	if (arg.key == OIS::KC_TAB)
+	/*if (arg.key == OIS::KC_TAB)
 	{
 		engine->entityManager->SelectNextEntity();
-	}
+	}*/
 	return true;
 }
 
@@ -148,153 +148,12 @@ bool InputManager::mouseMoved(const OIS::MouseEvent &arg)
 
 bool InputManager::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 {
-	if (id == OIS::MB_Left)
-	{
-		//std::cout << "Left mouse pressed" << std::endl;
-		HandleSingleSelection();
-	}
-	else if (id == OIS::MB_Right)
-	{
-		HandleCommand();
-	}
 	return true;
 }
 
 bool InputManager::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 {
     return true;
-}
-
-void InputManager::HandleSingleSelection()
-{
-	OIS::MouseState ms = mouse->getMouseState();
-	Ogre::Ray mouseRay = engine->graphicsManager->ogreCamera->getCameraToViewportRay(ms.X.abs / (float)ms.width, ms.Y.abs / (float)ms.height);
-	std::pair<bool, float> result = mouseRay.intersects(engine->gameManager->ocean);
-	if (result.first)
-	{
-		this->posUnderMouse = mouseRay.getPoint(result.second);
-		float minDistanceSquared = FLT_MAX;
-		float distanceSquared;
-		// find ent that is 1. Within threshold distance && 2. Nearest to mouse cursor
-		for (std::list<Entity381 *>::const_iterator it = engine->entityManager->entities.begin(); it != engine->entityManager->entities.end(); ++it)
-		{
-			distanceSquared = this->posUnderMouse.squaredDistance((*it)->pos);
-			if (distanceSquared < selectionDistanceSquaredThreshold)
-			{
-				if (distanceSquared < minDistanceSquared)
-				{
-					engine->entityManager->selectedEntity->isSelected = false;
-					engine->entityManager->selectedEntity = (*it);
-					(*it)->isSelected = true;
-					minDistanceSquared = distanceSquared;
-				}
-			}
-		}
-	}
-}
-
-Ogre::Vector3 InputManager::GetPositionUnderMouse() {
-	OIS::MouseState ms = mouse->getMouseState();
-	Ogre::Ray mouseRay = engine->graphicsManager->ogreCamera->getCameraToViewportRay(ms.X.abs / (float)ms.width, ms.Y.abs / (float)ms.height);
-	std::pair<bool, float> result = mouseRay.intersects(engine->gameManager->ocean);
-	if (result.first) {
-		return mouseRay.getPoint(result.second);
-	}
-	else {
-		return Ogre::Vector3::NEGATIVE_UNIT_Y;
-	}
-}
-
-Entity381 * InputManager::GetClosestEntityToPosition(Ogre::Vector3 position) {
-	Entity381* closest = 0;
-	float minDistanceSquared = FLT_MAX;
-	float distanceSquared;
-	// find ent that is 1. Within threshold distance && 2. Nearest to mouse cursor
-	for (std::list<Entity381 *>::const_iterator it = engine->entityManager->entities.begin(); it != engine->entityManager->entities.end(); ++it) {
-		distanceSquared = position.squaredDistance((*it)->pos);
-		if (distanceSquared < selectionDistanceSquaredThreshold) {
-			if (distanceSquared < minDistanceSquared) {
-				closest = (*it);
-				minDistanceSquared = distanceSquared;
-			}
-		}
-	}
-	return closest;
-}
-
-void InputManager::HandleCommand()
-{
-	std::cout << "Handling command" << std::endl;
-	if (engine->entityManager->selectedEntity != 0)
-	{
-		Ogre::Vector3 pos = GetPositionUnderMouse();
-		std::cout << "Right Click position: " << pos << std::endl;
-		if (pos != Ogre::Vector3::NEGATIVE_UNIT_Y)
-		{
-			Entity381 *closest = GetClosestEntityToPosition(pos);
-			if (closest == 0)
-			{
-				CommandMoveTo(pos);
-			}
-			else {
-				if (keyboard->isKeyDown(OIS::KC_LCONTROL))
-				{
-					CommandIntercept(closest);
-				}
-				else {
-					CommandFollow(closest);
-				}
-			}
-		}
-	}
-}
-
-void InputManager::AddOrSetCommand(Entity381* entity, Command *com)
-{
-	for (std::list<Aspect*>::const_iterator ai = entity->aspects.begin(); ai != entity->aspects.end(); ++ai)
-	{
-		if ((*ai)->aspectType == ASPECT_TYPE::AI)
-		{
-			UnitAI* unitAI = dynamic_cast<UnitAI *> (*ai);
-			if (keyboard->isKeyDown(OIS::KC_LSHIFT))
-			{
-				unitAI->AddCommand(com);
-			}
-			else
-			{
-				unitAI->SetCommand(com);
-			}
-			break;
-		}
-	}
-}
-
-void InputManager::CommandIntercept(Entity381* target)
-{
-	std::cout << "Intercepting: " << target->meshfile << std::endl;
-	Entity381* selectedEntity = engine->entityManager->selectedEntity;
-	Intercept *interceptCommand = new Intercept(selectedEntity, target);
-	interceptCommand->init();
-	AddOrSetCommand(selectedEntity, interceptCommand);
-}
-
-void InputManager::CommandFollow(Entity381 *target)
-{
-	std::cout << "Following: " << target->meshfile << std::endl;
-	Entity381* selectedEntity = engine->entityManager->selectedEntity;
-	Follow *followCommand = new Follow(selectedEntity, target);
-	followCommand->init();
-	AddOrSetCommand(selectedEntity, followCommand);
-}
-
-void InputManager::CommandMoveTo(Ogre::Vector3 position)
-{
-	std::cout << "Moving to: " << position << std::endl;
-	Entity381* selectedEntity = engine->entityManager->selectedEntity;
-	MoveTo* moveToCommand = new MoveTo(selectedEntity, position);
-	moveToCommand->init();
-	AddOrSetCommand(selectedEntity, moveToCommand);
-
 }
 
 // Game specific input handling
@@ -326,24 +185,5 @@ void InputManager::UpdateCamera(float dt)
 
 void InputManager::UpdateDesiredSpeedHeading(float dt)
 {
-	keyboardTimer -= dt;
-
-	if (engine->entityManager->selectedEntity)
-	{
-		if ((keyboardTimer < 0) && keyboard->isKeyDown(OIS::KC_S))
-		{
-			keyboardTimer = keyTime;
-			engine->entityManager->selectedEntity->stopCommands = true;
-		}
-	}
-}
-
-void InputManager::UpdateSelection(float dt)
-{
-	selectionTimer -= dt;
-	if (selectionTimer < 0 && keyboard->isKeyDown(OIS::KC_TAB))
-	{
-		selectionTimer = this->selectionTime;
-		engine->entityManager->SelectNextEntity();
-	}
+	//keyboardTimer -= dt;
 }
