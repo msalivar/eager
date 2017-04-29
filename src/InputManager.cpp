@@ -144,7 +144,6 @@ bool InputManager::UpdateLocations(float dt)
 	{
 		pOneKeyboardTimer = keyTime;
 		engine->gameManager->blueTank->heading -= turnSpeed;	
-
 	}
 	if((pOneKeyboardTimer < 0) && keyboard->isKeyDown(OIS::KC_S))
 	{
@@ -155,12 +154,10 @@ bool InputManager::UpdateLocations(float dt)
 	{
 		pOneKeyboardTimer = keyTime;
 		engine->gameManager->blueTank->heading += turnSpeed;
-		
 	}
 	if((pOneKeyboardTimer < 0) && keyboard->isKeyDown(OIS::KC_Y))
 	{
-		pOneKeyboardTimer = keyTime;
-		
+		pOneKeyboardTimer = keyTime;		
 	}
 	if((pOneKeyboardTimer < 0) && keyboard->isKeyDown(OIS::KC_G))
 	{
@@ -170,50 +167,43 @@ bool InputManager::UpdateLocations(float dt)
 	if((pOneKeyboardTimer < 0) && keyboard->isKeyDown(OIS::KC_J))
 	{
 		pOneKeyboardTimer = keyTime;
-		engine->gameManager->blueTurret->heading += turnSpeed;
-		
+		engine->gameManager->blueTurret->heading += turnSpeed;		
 	}
+
 	// PLAYER 2
 	if((pTwoKeyboardTimer < 0) && keyboard->isKeyDown(OIS::KC_UP))
 	{
 		pTwoKeyboardTimer = keyTime;
-		engine->gameManager->redTank->desiredSpeed += moveSpeed;
-		
+		engine->gameManager->redTank->desiredSpeed += moveSpeed;		
 	}
 	if((pTwoKeyboardTimer < 0) && keyboard->isKeyDown(OIS::KC_LEFT))
 	{
 		pTwoKeyboardTimer = keyTime;
-		engine->gameManager->redTank->heading -= turnSpeed;	
-		
+		engine->gameManager->redTank->heading -= turnSpeed;			
 	}
 	if((pTwoKeyboardTimer < 0) && keyboard->isKeyDown(OIS::KC_DOWN))
 	{
 		pTwoKeyboardTimer = keyTime;
-		engine->gameManager->redTank->desiredSpeed -= moveSpeed;
-		
+		engine->gameManager->redTank->desiredSpeed -= moveSpeed;		
 	}
 	if((pTwoKeyboardTimer < 0) && keyboard->isKeyDown(OIS::KC_RIGHT))
 	{
 		pTwoKeyboardTimer = keyTime;
-		engine->gameManager->redTank->heading += turnSpeed;	
-		
+		engine->gameManager->redTank->heading += turnSpeed;		
 	}
 	if((pTwoKeyboardTimer < 0) && keyboard->isKeyDown(OIS::KC_NUMPAD8))
 	{
-		pTwoKeyboardTimer = keyTime;
-		
+		pTwoKeyboardTimer = keyTime;		
 	}
 	if((pTwoKeyboardTimer < 0) && keyboard->isKeyDown(OIS::KC_NUMPAD4))
 	{
 		pTwoKeyboardTimer = keyTime;
-		engine->gameManager->redTurret->heading -= turnSpeed;
-		
+		engine->gameManager->redTurret->heading -= turnSpeed;		
 	}
 	if((pTwoKeyboardTimer < 0) && keyboard->isKeyDown(OIS::KC_NUMPAD6))
 	{
 		pTwoKeyboardTimer = keyTime;
-		engine->gameManager->redTurret->heading += turnSpeed;
-		
+		engine->gameManager->redTurret->heading += turnSpeed;		
 	}
 
 	return true;

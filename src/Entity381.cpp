@@ -69,6 +69,7 @@ BlueTank::BlueTank(Ogre::Vector3 pos) : Entity381(EntityType::BLUETANK, pos)
 	this->meshfile = "blueTank.mesh";
 	this->maxSpeed = 75;
 	this->acceleration = 50;
+	this->heading = 0;
 }
 
 BlueTank::~BlueTank()
@@ -80,6 +81,7 @@ RedTank::RedTank(Ogre::Vector3 pos) : Entity381(EntityType::REDTANK, pos)
 	this->meshfile = "redTank.mesh";
 	this->maxSpeed = 75;
 	this->acceleration = 50;
+	this->heading = 0;
 }
 
 RedTank::~RedTank()
@@ -89,6 +91,7 @@ RedTank::~RedTank()
 BlueTurret::BlueTurret(Ogre::Vector3 pos) : Entity381(EntityType::BLUETURRET, pos)
 {
 	this->meshfile = "blueTurret.mesh";
+	this->heading = 0;
 }
 
 BlueTurret::~BlueTurret()
@@ -98,6 +101,7 @@ BlueTurret::~BlueTurret()
 RedTurret::RedTurret(Ogre::Vector3 pos) : Entity381(EntityType::REDTURRET, pos)
 {
 	this->meshfile = "redTurret.mesh";
+	this->heading = 0;
 }
 
 RedTurret::~RedTurret()
@@ -108,6 +112,7 @@ Bullet::Bullet(Ogre::Vector3 pos) : Entity381(EntityType::BULLET, pos)
 {
 	this->meshfile = "cigarette.mesh";
 	this->maxSpeed = 30;
+	this->heading = 0;
 }
 
 Bullet::~Bullet()
