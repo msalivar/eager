@@ -28,22 +28,23 @@ private:
 	void UpdateCamera(float dt);
 	void UpdateDesiredSpeedHeading(float dt);
 
-	float keyboardTimer;
+	float pOneKeyboardTimer;
+	float pTwoKeyboardTimer;
 	float selectionTimer;
 	float keyTime;
 	float selectionTime;
 	Ogre::Vector3 posUnderMouse;
 	float selectionDistanceSquaredThreshold;
+    	bool UpdateLocations(float dt);
 
 protected:
     void windowResized(Ogre::RenderWindow *rw) override;
     void windowClosed(Ogre::RenderWindow *rw) override;
-
-    bool keyPressed(const OIS::KeyEvent &arg) override;
-    bool keyReleased(const OIS::KeyEvent &arg) override;
-    bool mouseMoved(const OIS::MouseEvent &arg) override;
-    bool mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id) override;
-    bool mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id) override;
+    virtual bool keyPressed(const OIS::KeyEvent &arg);
+    virtual bool keyReleased(const OIS::KeyEvent &arg);
+    virtual bool mouseMoved(const OIS::MouseEvent &arg);
+    virtual bool mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id);
+    virtual bool mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id);
 
 public:
     explicit InputManager(Engine *engine);

@@ -34,6 +34,7 @@ public:
 	Ogre::Vector3 vel;
 	Ogre::SceneNode *ogreSceneNode;
 	Ogre::Entity* ogreEntity;
+	Entity381* attachment;
 
 	//Engine stuff dynamic
 	float speed, heading;

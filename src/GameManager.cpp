@@ -43,12 +43,12 @@ void GameManager::tick(float dt)
 
 void GameManager::createEnts()
 {
-	Entity381 * ent;
-	ent = engine->entityManager->CreateEntity(EntityType::BLUETANK, Ogre::Vector3(-100, 0, 0));
-	ent = engine->entityManager->CreateEntity(EntityType::BLUETURRET, Ogre::Vector3(-100, 0, 0));
-	ent = engine->entityManager->CreateEntity(EntityType::REDTANK, Ogre::Vector3(100, 0, 0));
-	ent = engine->entityManager->CreateEntity(EntityType::REDTURRET, Ogre::Vector3(100, 0, 0));
-	std::cout << "Created: " << ent->meshfile << std::endl;
+	blueTank = engine->entityManager->CreateEntity(EntityType::BLUETANK, Ogre::Vector3(-100, 0, 0));
+	blueTurret = engine->entityManager->CreateEntity(EntityType::BLUETURRET, Ogre::Vector3(-100, 0, 0));
+	blueTank->attachment = blueTurret;
+	redTank = engine->entityManager->CreateEntity(EntityType::REDTANK, Ogre::Vector3(100, 0, 0));
+	redTurret = engine->entityManager->CreateEntity(EntityType::REDTURRET, Ogre::Vector3(100, 0, 0));
+	redTank->attachment = redTurret;
 }
 
 void GameManager::createGround()

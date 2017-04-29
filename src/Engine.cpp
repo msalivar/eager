@@ -5,7 +5,7 @@
  *      Author: sushil
  */
 
-#include "engine.h"
+#include "Engine.h"
 #include <OgreTimer.h>
 
 Engine::Engine()
