@@ -29,8 +29,9 @@ public:
     void loadLevel() override;
     void stop() override;
 
-	Entity381 *CreateEntity(EntityType entityType, Ogre::Vector3 pos);
-	void CreateOgreEntityAndNode(Entity381 *ent);
+	Entity381* CreateEntity(EntityType entityType, Ogre::Vector3 pos);
+	Entity381* CreateProjectile(Ogre::Vector3 position, float heading);
+	void CreateOgreEntityAndNode(Entity381 *ent, float scale = 1);
 
 	std::list<Entity381 *> entities;
 

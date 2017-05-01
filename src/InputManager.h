@@ -26,16 +26,23 @@ public Ogre::FrameListener
 {
 private:
 	void UpdateCamera(float dt);
-	void UpdateDesiredSpeedHeading(float dt);
 
-	float pOneKeyboardTimer;
-	float pTwoKeyboardTimer;
-	float selectionTimer;
-	float keyTime;
-	float selectionTime;
-	Ogre::Vector3 posUnderMouse;
-	float selectionDistanceSquaredThreshold;
-    	bool UpdateLocations(float dt);
+	float pOneMoveTimer;
+	float pOneTurnTimer;
+	float pOneAimTimer;
+	float pOneShootTimer;
+
+	float pTwoMoveTimer;
+	float pTwoTurnTimer;
+	float pTwoAimTimer;
+	float pTwoShootTimer;
+
+	float moveTime;
+	float turnTime;
+	float aimTime;
+	float shootTime;
+
+    bool UpdateLocations(float dt);
 
 protected:
     void windowResized(Ogre::RenderWindow *rw) override;

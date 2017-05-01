@@ -24,19 +24,6 @@ void UnitAI::SetCommand(Command* c)
 
 void UnitAI::Tick(float dt)
 {
-	if (!commands.empty())
-	{
-		if (this->entity->stopCommands)
-		{
-			commands.clear();
-			return;
-		}
-		commands.front()->tick(dt);
-		if (commands.front()->done())
-		{
-			commands.pop_front();
-		}
-	}
 }
 
 

@@ -39,10 +39,8 @@ public:
 	//Engine stuff dynamic
 	float speed, heading;
 	float desiredSpeed, desiredHeading;
-	bool stopCommands;
-
-	//selection
-	bool isSelected;
+	int bulletCount;
+	int bulletLimit;
 
 	unsigned int entityId;
 
@@ -84,6 +82,6 @@ public:
 class Bullet : public Entity381 {
 
 public:
-	Bullet(Ogre::Vector3 pos);
+	Bullet(Ogre::Vector3 pos, float heading);
 	~Bullet();
 };

@@ -18,14 +18,14 @@ Entity381::Entity381(EntityType entType, Ogre::Vector3 pos)
 	this->heading = heading;
 	this->vel = Ogre::Vector3::ZERO;
 	this->speed = 0;
-	this->isSelected = false;
 	this->attachment = nullptr;
+	this->bulletCount = 0;
+	this->bulletLimit = 3;
 
 	this->aspects.clear();
 	Renderable *r = new Renderable(this);
 	Physics *p = new Physics(this);
 	UnitAI *ai = new UnitAI(this);
-	stopCommands = false;
 
 	this->aspects.push_front(r);
 	this->aspects.push_front(p);
@@ -51,11 +51,11 @@ void Entity381::Tick(float dt)
 
 void Entity381::DefaultInit()
 {
-	this->acceleration = 0.5f;
+	this->acceleration = 40;
 	this->turnRate = 0.2f;
 
-	this->maxSpeed = 75;
-	this->minSpeed = -30;
+	this->maxSpeed = 30;
+	this->minSpeed = -15;
 
 	this->desiredHeading = this->heading;
 	this->desiredSpeed = 0;
@@ -67,8 +67,6 @@ void Entity381::DefaultInit()
 BlueTank::BlueTank(Ogre::Vector3 pos) : Entity381(EntityType::BLUETANK, pos)
 {
 	this->meshfile = "blueTank.mesh";
-	this->maxSpeed = 75;
-	this->acceleration = 50;
 	this->heading = 0;
 }
 
@@ -79,8 +77,6 @@ BlueTank::~BlueTank()
 RedTank::RedTank(Ogre::Vector3 pos) : Entity381(EntityType::REDTANK, pos)
 {
 	this->meshfile = "redTank.mesh";
-	this->maxSpeed = 75;
-	this->acceleration = 50;
 	this->heading = 0;
 }
 
@@ -108,11 +104,14 @@ RedTurret::~RedTurret()
 {
 }
 
-Bullet::Bullet(Ogre::Vector3 pos) : Entity381(EntityType::BULLET, pos)
+Bullet::Bullet(Ogre::Vector3 pos, float heading) : Entity381(EntityType::BULLET, pos)
 {
-	this->meshfile = "cigarette.mesh";
-	this->maxSpeed = 30;
-	this->heading = 0;
+	this->meshfile = "bullet.mesh";
+	this->desiredSpeed = 50;
+	this->maxSpeed = 50;
+	this->speed = 50;
+	this->heading = heading;
+	this->desiredHeading = heading;
 }
 
 Bullet::~Bullet()

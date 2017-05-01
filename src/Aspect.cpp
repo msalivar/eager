@@ -31,10 +31,6 @@ void Renderable::Tick(float dt)
 	entity->ogreSceneNode->setPosition(entity->pos);
 	entity->ogreSceneNode->setOrientation(Ogre::Quaternion::IDENTITY);
 	entity->ogreSceneNode->yaw(Ogre::Radian(-entity->heading));
-	if (entity->isSelected)
-		entity->ogreSceneNode->showBoundingBox(true);
-	else
-		entity->ogreSceneNode->showBoundingBox(false);
 }
 
 Physics::Physics(Entity381 * ent) : Aspect(ent)
@@ -52,12 +48,7 @@ void Physics::Tick(float dt)
 	if (entity->speed < entity->desiredSpeed)
 		entity->speed += entity->acceleration * dt;
 	if (entity->speed > entity->desiredSpeed)
-		entity->speed -= entity->acceleration * dt * 10;
-
-	//if (entity->heading < entity->desiredHeading)
-		//entity->heading += entity->turnRate * dt;
-	//if (entity->heading > entity->desiredHeading)
-		//entity->heading -= entity->turnRate * dt;
+		entity->speed -= entity->acceleration * dt;
 
 	entity->vel = Ogre::Vector3(cos(entity->heading) * entity->speed, 0, sin(entity->heading) * entity->speed);
 	entity->pos += entity->vel * dt;
