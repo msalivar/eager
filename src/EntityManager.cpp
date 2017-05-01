@@ -37,22 +37,20 @@ void EntityManager::stop()
 {
 }
 
-void EntityManager::CreateOgreEntityAndNode(Entity381 *ent)
+void EntityManager::CreateOgreEntityAndNode(Entity381 *ent, float scale)
 {
-
 	if (ent)
 	{
 		ent->ogreEntity = engine->graphicsManager->ogreSceneManager->createEntity(ent->meshfile);
 		ent->ogreSceneNode = 
 			engine->graphicsManager->ogreSceneManager->getRootSceneNode()->createChildSceneNode(ent->pos);
 		ent->ogreSceneNode->attachObject(ent->ogreEntity);
+		ent->ogreSceneNode->scale(scale, scale, scale);
 	}
-
 }
 
 Entity381* EntityManager::CreateEntity(EntityType entityType, Ogre::Vector3 position)
 {
-
 	Entity381 *ent = 0;
 	switch (entityType)
 	{
@@ -68,15 +66,21 @@ Entity381* EntityManager::CreateEntity(EntityType entityType, Ogre::Vector3 posi
 	case EntityType::REDTURRET:
 		ent = new RedTurret(position);
 		break;
-	case EntityType::BULLET:
-		ent = new Bullet(position);
-		break;
 	default:
-		ent = new Bullet(position);
+		ent = new BlueTank(position);
 		break;
 	}
 
 	CreateOgreEntityAndNode(ent);
+	entities.push_front(ent);
+	return ent;
+}
+
+Entity381* EntityManager::CreateProjectile(Ogre::Vector3 position, float heading)
+{
+	Entity381 *ent = 0;
+	ent = new Bullet(position, heading);
+	CreateOgreEntityAndNode(ent, 5);
 	entities.push_front(ent);
 	return ent;
 }

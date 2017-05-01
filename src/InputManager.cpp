@@ -18,12 +18,20 @@
 
 InputManager::InputManager(Engine *engine) : Manager(engine)
 {
-	keyTime = 0.05f;
-	selectionTime = 0.2f;
-	pOneKeyboardTimer = keyTime;
-	pTwoKeyboardTimer = keyTime;
-	selectionTimer = selectionTime;
-	selectionDistanceSquaredThreshold = 10000;
+	moveTime = 0.05f;
+	turnTime = 0.05f;
+	aimTime = 0.05f;
+	shootTime = 0.5f;
+
+	pOneMoveTimer = moveTime;
+	pOneTurnTimer = turnTime;
+	pOneShootTimer = shootTime;
+	pOneAimTimer = aimTime;
+
+	pTwoMoveTimer = moveTime;
+	pTwoTurnTimer = turnTime;
+	pTwoShootTimer = shootTime;
+	pTwoAimTimer = aimTime;
 
     keyboard = nullptr;
     mouse = nullptr;
@@ -129,80 +137,92 @@ void InputManager::windowClosed(Ogre::RenderWindow* rw)
 bool InputManager::UpdateLocations(float dt)
 {
 	float moveSpeed = 4;
+	float slowSpeed = 6;
 	float turnSpeed = 0.02f;
 
-	pOneKeyboardTimer -= dt;
-	pTwoKeyboardTimer -= dt;	
+	pOneMoveTimer -= dt;
+	pOneTurnTimer -= dt;
+	pOneShootTimer -= dt;
+	pOneAimTimer -= dt;
+
+	pTwoMoveTimer -= dt;
+	pTwoTurnTimer -= dt;
+	pTwoShootTimer -= dt;
+	pTwoAimTimer -= dt;
 
 	// PLAYER 1
-	if((pOneKeyboardTimer < 0) && keyboard->isKeyDown(OIS::KC_W))
+	if((pOneMoveTimer < 0) && keyboard->isKeyDown(OIS::KC_W))
 	{
-		pOneKeyboardTimer = keyTime;
+		pOneMoveTimer = moveTime;
 		engine->gameManager->blueTank->desiredSpeed += moveSpeed;
 	}
-	if((pOneKeyboardTimer < 0) && keyboard->isKeyDown(OIS::KC_A))
+	if((pOneTurnTimer < 0) && keyboard->isKeyDown(OIS::KC_A))
 	{
-		pOneKeyboardTimer = keyTime;
+		pOneTurnTimer = turnTime;
 		engine->gameManager->blueTank->heading -= turnSpeed;	
 	}
-	if((pOneKeyboardTimer < 0) && keyboard->isKeyDown(OIS::KC_S))
+	if((pOneMoveTimer < 0) && keyboard->isKeyDown(OIS::KC_S))
 	{
-		pOneKeyboardTimer = keyTime;
-		engine->gameManager->blueTank->desiredSpeed -= moveSpeed;	
+		pOneMoveTimer = moveTime;
+		engine->gameManager->blueTank->desiredSpeed -= slowSpeed;
 	}
-	if((pOneKeyboardTimer < 0) && keyboard->isKeyDown(OIS::KC_D))
+	if((pOneTurnTimer < 0) && keyboard->isKeyDown(OIS::KC_D))
 	{
-		pOneKeyboardTimer = keyTime;
+		pOneTurnTimer = turnTime;
 		engine->gameManager->blueTank->heading += turnSpeed;
 	}
-	if((pOneKeyboardTimer < 0) && keyboard->isKeyDown(OIS::KC_Y))
+	if((pOneShootTimer < 0) && keyboard->isKeyDown(OIS::KC_Y))
 	{
-		pOneKeyboardTimer = keyTime;		
+		pOneShootTimer = shootTime;
+		engine->entityManager->CreateProjectile(engine->gameManager->blueTank->pos,
+			engine->gameManager->blueTurret->heading);
 	}
-	if((pOneKeyboardTimer < 0) && keyboard->isKeyDown(OIS::KC_G))
+	if((pOneAimTimer < 0) && keyboard->isKeyDown(OIS::KC_G))
 	{
-		pOneKeyboardTimer = keyTime;
+		pOneAimTimer = aimTime;
 		engine->gameManager->blueTurret->heading -= turnSpeed;
 	}
-	if((pOneKeyboardTimer < 0) && keyboard->isKeyDown(OIS::KC_J))
+	if((pOneAimTimer < 0) && keyboard->isKeyDown(OIS::KC_J))
 	{
-		pOneKeyboardTimer = keyTime;
+		pOneAimTimer = aimTime;
 		engine->gameManager->blueTurret->heading += turnSpeed;		
 	}
 
 	// PLAYER 2
-	if((pTwoKeyboardTimer < 0) && keyboard->isKeyDown(OIS::KC_UP))
+	if((pTwoMoveTimer < 0) && keyboard->isKeyDown(OIS::KC_UP))
 	{
-		pTwoKeyboardTimer = keyTime;
+		pTwoMoveTimer = moveTime;
 		engine->gameManager->redTank->desiredSpeed += moveSpeed;		
 	}
-	if((pTwoKeyboardTimer < 0) && keyboard->isKeyDown(OIS::KC_LEFT))
+	if((pTwoTurnTimer < 0) && keyboard->isKeyDown(OIS::KC_LEFT))
 	{
-		pTwoKeyboardTimer = keyTime;
+		pTwoTurnTimer = turnTime;
 		engine->gameManager->redTank->heading -= turnSpeed;			
 	}
-	if((pTwoKeyboardTimer < 0) && keyboard->isKeyDown(OIS::KC_DOWN))
+	if((pTwoMoveTimer < 0) && keyboard->isKeyDown(OIS::KC_DOWN))
 	{
-		pTwoKeyboardTimer = keyTime;
-		engine->gameManager->redTank->desiredSpeed -= moveSpeed;		
+		pTwoMoveTimer = moveTime;
+		engine->gameManager->redTank->desiredSpeed -= slowSpeed;
 	}
-	if((pTwoKeyboardTimer < 0) && keyboard->isKeyDown(OIS::KC_RIGHT))
+	if((pTwoTurnTimer < 0) && keyboard->isKeyDown(OIS::KC_RIGHT))
 	{
-		pTwoKeyboardTimer = keyTime;
+		pTwoTurnTimer = turnTime;
 		engine->gameManager->redTank->heading += turnSpeed;		
 	}
-	if((pTwoKeyboardTimer < 0) && keyboard->isKeyDown(OIS::KC_NUMPAD8))
+	if((pTwoShootTimer < 0) && keyboard->isKeyDown(OIS::KC_NUMPAD8))
 	{
-		pTwoKeyboardTimer = keyTime;		
+		pTwoShootTimer = shootTime;
+		engine->entityManager->CreateProjectile(engine->gameManager->redTank->pos,
+			engine->gameManager->redTurret->heading);
 	}
-	if((pTwoKeyboardTimer < 0) && keyboard->isKeyDown(OIS::KC_NUMPAD4))
+	if((pTwoAimTimer < 0) && keyboard->isKeyDown(OIS::KC_NUMPAD4))
 	{
-		pTwoKeyboardTimer = keyTime;
+		pTwoAimTimer = aimTime;
 		engine->gameManager->redTurret->heading -= turnSpeed;		
 	}
-	if((pTwoKeyboardTimer < 0) && keyboard->isKeyDown(OIS::KC_NUMPAD6))
+	if((pTwoAimTimer < 0) && keyboard->isKeyDown(OIS::KC_NUMPAD6))
 	{
-		pTwoKeyboardTimer = keyTime;
+		pTwoAimTimer = aimTime;
 		engine->gameManager->redTurret->heading += turnSpeed;		
 	}
 
@@ -225,7 +245,7 @@ bool InputManager::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID 
 	return true;
 }
 
-// Game specific input handling
+// camera movement for testing
 void InputManager::UpdateCamera(float dt)
 {
 	float move = 100.0f;
