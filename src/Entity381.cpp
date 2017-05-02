@@ -22,6 +22,7 @@ Entity381::Entity381(EntityType entType, Ogre::Vector3 pos)
 	this->bulletCount = 0;
 	this->bulletLimit = 3;
 	this->destroyFlag = false;
+	this->reloadTime = 4.0f;
 
 	if (entityType == EntityType::BULLET)
 		this->lifeTime = 5.0f;
@@ -53,15 +54,23 @@ void Entity381::Tick(float dt)
     {
         aspect->Tick(dt);
     }
+	reloadTime -= dt;
+	if (reloadTime <= 0)
+	{
+		reloadTime = 4.0f;
+		bulletCount = 0;
+	}
 }
 
 void Entity381::DefaultInit()
 {
-	this->acceleration = 40;
+	this->acceleration = 8.0f;
+	this->deceleration = 15.0f;
+	this->reverseAcceleration = 3.0f;
 	this->turnRate = 0.2f;
 
-	this->maxSpeed = 30;
-	this->minSpeed = -15;
+	this->maxSpeed = 35.0f;
+	this->minSpeed = -25.0f;
 
 	this->desiredHeading = this->heading;
 	this->desiredSpeed = 0;

@@ -55,8 +55,10 @@ void Physics::Tick(float dt)
 {
 	if (entity->speed < entity->desiredSpeed)
 		entity->speed += entity->acceleration * dt;
-	if (entity->speed > entity->desiredSpeed)
-		entity->speed -= entity->acceleration * dt;
+	else if (entity->speed > entity->desiredSpeed && entity->speed > 0)
+		entity->speed -= entity->deceleration * dt;
+	else if (entity->speed > entity->desiredSpeed && entity->speed <= 0)
+		entity->speed -= entity->reverseAcceleration * dt;
 
 	entity->vel = Ogre::Vector3(cos(entity->heading) * entity->speed, 0, sin(entity->heading) * entity->speed);
 	entity->pos += entity->vel * dt;

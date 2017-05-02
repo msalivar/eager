@@ -25,7 +25,7 @@ public:
 	//static stuff
 	static int nextId;
 	float maxSpeed, minSpeed;
-	float acceleration, turnRate;
+	float acceleration, deceleration, reverseAcceleration, turnRate;
 	EntityType entityType;
 	std::string meshfile;
 
@@ -40,6 +40,7 @@ public:
 	float speed, heading;
 	float desiredSpeed, desiredHeading;
 	float lifeTime;
+	float reloadTime;
 	int bulletCount;
 	int bulletLimit;
 	bool destroyFlag;
