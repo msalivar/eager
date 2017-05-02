@@ -136,8 +136,8 @@ void InputManager::windowClosed(Ogre::RenderWindow* rw)
 
 bool InputManager::UpdateLocations(float dt)
 {
-	float moveSpeed = 4;
-	float slowSpeed = 6;
+	float moveSpeed = 1;
+	float slowSpeed = 2;
 	float turnSpeed = 0.02f;
 
 	pOneMoveTimer -= dt;
@@ -154,7 +154,8 @@ bool InputManager::UpdateLocations(float dt)
 	if((pOneMoveTimer < 0) && keyboard->isKeyDown(OIS::KC_W))
 	{
 		pOneMoveTimer = moveTime;
-		engine->gameManager->blueTank->desiredSpeed += moveSpeed;
+		if (engine->gameManager->blueTank->desiredSpeed < engine->gameManager->blueTank->maxSpeed)
+			engine->gameManager->blueTank->desiredSpeed += moveSpeed;
 	}
 	if((pOneTurnTimer < 0) && keyboard->isKeyDown(OIS::KC_A))
 	{
@@ -164,7 +165,8 @@ bool InputManager::UpdateLocations(float dt)
 	if((pOneMoveTimer < 0) && keyboard->isKeyDown(OIS::KC_S))
 	{
 		pOneMoveTimer = moveTime;
-		engine->gameManager->blueTank->desiredSpeed -= slowSpeed;
+		if (engine->gameManager->blueTank->desiredSpeed > engine->gameManager->blueTank->minSpeed)
+			engine->gameManager->blueTank->desiredSpeed -= slowSpeed;
 	}
 	if((pOneTurnTimer < 0) && keyboard->isKeyDown(OIS::KC_D))
 	{
@@ -173,12 +175,21 @@ bool InputManager::UpdateLocations(float dt)
 	}
 	if((pOneShootTimer < 0) && keyboard->isKeyDown(OIS::KC_Y))
 	{
-		pOneShootTimer = shootTime;
-		engine->entityManager->CreateProjectile(engine->gameManager->blueTank->pos,
-			engine->gameManager->blueTurret->heading);
+		if (engine->gameManager->blueTank->bulletCount <
+			engine->gameManager->blueTank->bulletLimit)
+		{
+			engine->gameManager->blueTank->bulletCount++;
+			if (engine->gameManager->blueTank->bulletCount == 1)
+			{
+				engine->gameManager->blueTank->reloadTime = 4.0f;
+			}
+			pOneShootTimer = shootTime;
+			engine->entityManager->CreateProjectile(engine->gameManager->blueTank->pos,
+				engine->gameManager->blueTurret->heading);
+		}
 	}
 	if((pOneAimTimer < 0) && keyboard->isKeyDown(OIS::KC_G))
-	{
+	{		
 		pOneAimTimer = aimTime;
 		engine->gameManager->blueTurret->heading -= turnSpeed;
 	}
@@ -192,7 +203,8 @@ bool InputManager::UpdateLocations(float dt)
 	if((pTwoMoveTimer < 0) && keyboard->isKeyDown(OIS::KC_UP))
 	{
 		pTwoMoveTimer = moveTime;
-		engine->gameManager->redTank->desiredSpeed += moveSpeed;		
+		if (engine->gameManager->redTank->desiredSpeed > engine->gameManager->redTank->minSpeed)
+			engine->gameManager->redTank->desiredSpeed += moveSpeed;		
 	}
 	if((pTwoTurnTimer < 0) && keyboard->isKeyDown(OIS::KC_LEFT))
 	{
@@ -202,7 +214,8 @@ bool InputManager::UpdateLocations(float dt)
 	if((pTwoMoveTimer < 0) && keyboard->isKeyDown(OIS::KC_DOWN))
 	{
 		pTwoMoveTimer = moveTime;
-		engine->gameManager->redTank->desiredSpeed -= slowSpeed;
+		if (engine->gameManager->redTank->desiredSpeed > engine->gameManager->redTank->minSpeed)
+			engine->gameManager->redTank->desiredSpeed -= slowSpeed;
 	}
 	if((pTwoTurnTimer < 0) && keyboard->isKeyDown(OIS::KC_RIGHT))
 	{
@@ -211,9 +224,18 @@ bool InputManager::UpdateLocations(float dt)
 	}
 	if((pTwoShootTimer < 0) && keyboard->isKeyDown(OIS::KC_NUMPAD8))
 	{
-		pTwoShootTimer = shootTime;
-		engine->entityManager->CreateProjectile(engine->gameManager->redTank->pos,
-			engine->gameManager->redTurret->heading);
+		if (engine->gameManager->redTank->bulletCount <
+			engine->gameManager->redTank->bulletLimit)
+		{
+			engine->gameManager->redTank->bulletCount++;
+			if (engine->gameManager->redTank->bulletCount == 1)
+			{
+				engine->gameManager->redTank->reloadTime = 4.0f;
+			}
+			pTwoShootTimer = shootTime;
+			engine->entityManager->CreateProjectile(engine->gameManager->redTank->pos,
+				engine->gameManager->redTurret->heading);
+		}
 	}
 	if((pTwoAimTimer < 0) && keyboard->isKeyDown(OIS::KC_NUMPAD4))
 	{

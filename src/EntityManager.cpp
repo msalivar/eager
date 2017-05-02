@@ -7,6 +7,7 @@
 
 #include "EntityManager.h"
 #include "Engine.h"
+#include <string.h>
 
 EntityManager::EntityManager(Engine *eng): Manager(eng)
 {
@@ -15,12 +16,27 @@ EntityManager::EntityManager(Engine *eng): Manager(eng)
 
 EntityManager::~EntityManager()
 {
+	entities.clear();
 }
 
 void EntityManager::tick(float dt)
 {
+	// some serious stuff going on here
     for(const auto& entity : entities)
     {
+		if (entity->destroyFlag)
+		{
+			entity->aspects.clear();
+			engine->graphicsManager->ogreSceneManager->destroyEntity(entity->ogreEntity);
+			entity->ogreEntity = nullptr;
+			entity->ogreSceneNode = nullptr;
+			if (entity->attachment != nullptr)
+			{
+				entity->attachment->destroyFlag = true;
+			}
+			entity->destroyFlag = false;
+			continue;
+		}
         entity->Tick(dt);
     }
 }
@@ -41,7 +57,10 @@ void EntityManager::CreateOgreEntityAndNode(Entity381 *ent, float scale)
 {
 	if (ent)
 	{
-		ent->ogreEntity = engine->graphicsManager->ogreSceneManager->createEntity(ent->meshfile);
+		ent->ogreEntity = 
+			engine->graphicsManager->ogreSceneManager->createEntity(
+				std::to_string(Entity381::nextId),
+				ent->meshfile);
 		ent->ogreSceneNode = 
 			engine->graphicsManager->ogreSceneManager->getRootSceneNode()->createChildSceneNode(ent->pos);
 		ent->ogreSceneNode->attachObject(ent->ogreEntity);
