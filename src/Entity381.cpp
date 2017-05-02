@@ -13,7 +13,7 @@ int Entity381::nextId = 0;
 
 Entity381::Entity381(EntityType entType, Ogre::Vector3 pos)
 {
-	entityType = entType;
+	this->entityType = entType;
 	this->pos = pos;
 	this->heading = heading;
 	this->vel = Ogre::Vector3::ZERO;
@@ -21,6 +21,12 @@ Entity381::Entity381(EntityType entType, Ogre::Vector3 pos)
 	this->attachment = nullptr;
 	this->bulletCount = 0;
 	this->bulletLimit = 3;
+	this->destroyFlag = false;
+
+	if (entityType == EntityType::BULLET)
+		this->lifeTime = 5.0f;
+	else
+		this->lifeTime = 0;
 
 	this->aspects.clear();
 	Renderable *r = new Renderable(this);

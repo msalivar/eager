@@ -31,6 +31,14 @@ void Renderable::Tick(float dt)
 	entity->ogreSceneNode->setPosition(entity->pos);
 	entity->ogreSceneNode->setOrientation(Ogre::Quaternion::IDENTITY);
 	entity->ogreSceneNode->yaw(Ogre::Radian(-entity->heading));
+	if (entity->entityType == EntityType::BULLET)
+	{
+		entity->lifeTime -= dt;
+		if (entity->lifeTime <= 0)
+		{
+			entity->destroyFlag = true;
+		}
+	}
 }
 
 Physics::Physics(Entity381 * ent) : Aspect(ent)

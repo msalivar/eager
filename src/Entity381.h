@@ -39,48 +39,46 @@ public:
 	//Engine stuff dynamic
 	float speed, heading;
 	float desiredSpeed, desiredHeading;
+	float lifeTime;
 	int bulletCount;
 	int bulletLimit;
+	bool destroyFlag;
 
 	unsigned int entityId;
 
 	std::list<Aspect*> aspects;
 };
 
-class BlueTank : public Entity381 {
-
+class BlueTank : public Entity381
+{
 public:
 	BlueTank(Ogre::Vector3 pos);
 	~BlueTank();
-
 };
 
-class RedTank : public Entity381 {
-
+class RedTank : public Entity381
+{
 public:
 	RedTank(Ogre::Vector3 pos);
 	~RedTank();
-
 };
 
-class BlueTurret : public Entity381 {
-
+class BlueTurret : public Entity381
+{
 public:
 	BlueTurret(Ogre::Vector3 pos);
 	~BlueTurret();
-
 };
 
-class RedTurret : public Entity381 {
-
+class RedTurret : public Entity381
+{
 public:
 	RedTurret(Ogre::Vector3 pos);
 	~RedTurret();
-
 };
 
-class Bullet : public Entity381 {
-
+class Bullet : public Entity381
+{
 public:
 	Bullet(Ogre::Vector3 pos, float heading);
 	~Bullet();

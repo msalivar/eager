@@ -179,8 +179,12 @@ bool InputManager::UpdateLocations(float dt)
 	}
 	if((pOneAimTimer < 0) && keyboard->isKeyDown(OIS::KC_G))
 	{
-		pOneAimTimer = aimTime;
-		engine->gameManager->blueTurret->heading -= turnSpeed;
+		if (engine->gameManager->blueTurret->bulletCount <
+			engine->gameManager->blueTurret->bulletLimit)
+		{
+			pOneAimTimer = aimTime;
+			engine->gameManager->blueTurret->heading -= turnSpeed;
+		}
 	}
 	if((pOneAimTimer < 0) && keyboard->isKeyDown(OIS::KC_J))
 	{
