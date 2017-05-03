@@ -8,13 +8,15 @@
 #include "InputManager.h"
 #include "Engine.h"
 #include "Aspect.h"
-#include "UnitAI.h"
+#include "UIManager.h"
 
 #include <cfloat>
 #include <string>
 #include <iostream>
 #include <sstream>
 #include <ostream>
+
+#include <OgreRay.h>
 
 InputManager::InputManager(Engine *engine) : Manager(engine)
 {
@@ -78,7 +80,7 @@ InputManager::InputManager(Engine *engine) : Manager(engine)
     //trayManager = new OgreBites::SdkTrayManager("InterfaceName", engine->graphicsManager->ogreRenderWindow, inputContext, this);
     //trayManager->showCursor();
 
-    engine->graphicsManager->ogreRoot->addFrameListener(this);
+    //engine->graphicsManager->ogreRoot->addFrameListener(this);
 }
 
 void InputManager::init()
@@ -96,10 +98,16 @@ void InputManager::tick(float dt)
 	keyboard->capture();
 	mouse->capture();
 	if (keyboard->isKeyDown(OIS::KC_ESCAPE))
+	{
 		engine->stop();
+	}
 
-	UpdateCamera(dt);
-	UpdateLocations(dt);
+	if (engine->currentState == STATE::GAMEPLAY)
+	{
+		UpdateCamera(dt);
+		UpdateLocations(dt);
+	}
+
 	//UpdateSelection(dt);
 }
 
@@ -151,29 +159,29 @@ bool InputManager::UpdateLocations(float dt)
 	pTwoAimTimer -= dt;
 
 	// PLAYER 1
-	if((pOneMoveTimer < 0) && keyboard->isKeyDown(OIS::KC_W))
+	if ((pOneMoveTimer < 0) && keyboard->isKeyDown(OIS::KC_W))
 	{
 		pOneMoveTimer = moveTime;
 		if (engine->gameManager->blueTank->desiredSpeed < engine->gameManager->blueTank->maxSpeed)
 			engine->gameManager->blueTank->desiredSpeed += moveSpeed;
 	}
-	if((pOneTurnTimer < 0) && keyboard->isKeyDown(OIS::KC_A))
+	if ((pOneTurnTimer < 0) && keyboard->isKeyDown(OIS::KC_A))
 	{
 		pOneTurnTimer = turnTime;
-		engine->gameManager->blueTank->heading -= turnSpeed;	
+		engine->gameManager->blueTank->heading -= turnSpeed;
 	}
-	if((pOneMoveTimer < 0) && keyboard->isKeyDown(OIS::KC_S))
+	if ((pOneMoveTimer < 0) && keyboard->isKeyDown(OIS::KC_S))
 	{
 		pOneMoveTimer = moveTime;
 		if (engine->gameManager->blueTank->desiredSpeed > engine->gameManager->blueTank->minSpeed)
 			engine->gameManager->blueTank->desiredSpeed -= slowSpeed;
 	}
-	if((pOneTurnTimer < 0) && keyboard->isKeyDown(OIS::KC_D))
+	if ((pOneTurnTimer < 0) && keyboard->isKeyDown(OIS::KC_D))
 	{
 		pOneTurnTimer = turnTime;
 		engine->gameManager->blueTank->heading += turnSpeed;
 	}
-	if((pOneShootTimer < 0) && keyboard->isKeyDown(OIS::KC_Y))
+	if ((pOneShootTimer < 0) && keyboard->isKeyDown(OIS::KC_Y))
 	{
 		if (engine->gameManager->blueTank->bulletCount <
 			engine->gameManager->blueTank->bulletLimit)
@@ -185,44 +193,44 @@ bool InputManager::UpdateLocations(float dt)
 			}
 			pOneShootTimer = shootTime;
 			engine->entityManager->CreateProjectile(engine->gameManager->blueTank->pos,
-				engine->gameManager->blueTurret->heading);
+				engine->gameManager->blueTurret->heading, EntityType::BLUETANK);
 		}
 	}
-	if((pOneAimTimer < 0) && keyboard->isKeyDown(OIS::KC_G))
-	{		
+	if ((pOneAimTimer < 0) && keyboard->isKeyDown(OIS::KC_G))
+	{
 		pOneAimTimer = aimTime;
 		engine->gameManager->blueTurret->heading -= turnSpeed;
 	}
-	if((pOneAimTimer < 0) && keyboard->isKeyDown(OIS::KC_J))
+	if ((pOneAimTimer < 0) && keyboard->isKeyDown(OIS::KC_J))
 	{
 		pOneAimTimer = aimTime;
-		engine->gameManager->blueTurret->heading += turnSpeed;		
+		engine->gameManager->blueTurret->heading += turnSpeed;
 	}
 
 	// PLAYER 2
-	if((pTwoMoveTimer < 0) && keyboard->isKeyDown(OIS::KC_UP))
+	if ((pTwoMoveTimer < 0) && keyboard->isKeyDown(OIS::KC_UP))
 	{
 		pTwoMoveTimer = moveTime;
-		if (engine->gameManager->redTank->desiredSpeed > engine->gameManager->redTank->minSpeed)
-			engine->gameManager->redTank->desiredSpeed += moveSpeed;		
+		if (engine->gameManager->redTank->desiredSpeed < engine->gameManager->redTank->maxSpeed)
+			engine->gameManager->redTank->desiredSpeed += moveSpeed;
 	}
-	if((pTwoTurnTimer < 0) && keyboard->isKeyDown(OIS::KC_LEFT))
+	if ((pTwoTurnTimer < 0) && keyboard->isKeyDown(OIS::KC_LEFT))
 	{
 		pTwoTurnTimer = turnTime;
-		engine->gameManager->redTank->heading -= turnSpeed;			
+		engine->gameManager->redTank->heading -= turnSpeed;
 	}
-	if((pTwoMoveTimer < 0) && keyboard->isKeyDown(OIS::KC_DOWN))
+	if ((pTwoMoveTimer < 0) && keyboard->isKeyDown(OIS::KC_DOWN))
 	{
 		pTwoMoveTimer = moveTime;
 		if (engine->gameManager->redTank->desiredSpeed > engine->gameManager->redTank->minSpeed)
 			engine->gameManager->redTank->desiredSpeed -= slowSpeed;
 	}
-	if((pTwoTurnTimer < 0) && keyboard->isKeyDown(OIS::KC_RIGHT))
+	if ((pTwoTurnTimer < 0) && keyboard->isKeyDown(OIS::KC_RIGHT))
 	{
 		pTwoTurnTimer = turnTime;
-		engine->gameManager->redTank->heading += turnSpeed;		
+		engine->gameManager->redTank->heading += turnSpeed;
 	}
-	if((pTwoShootTimer < 0) && keyboard->isKeyDown(OIS::KC_NUMPAD8))
+	if ((pTwoShootTimer < 0) && keyboard->isKeyDown(OIS::KC_NUMPAD8))
 	{
 		if (engine->gameManager->redTank->bulletCount <
 			engine->gameManager->redTank->bulletLimit)
@@ -234,18 +242,18 @@ bool InputManager::UpdateLocations(float dt)
 			}
 			pTwoShootTimer = shootTime;
 			engine->entityManager->CreateProjectile(engine->gameManager->redTank->pos,
-				engine->gameManager->redTurret->heading);
+				engine->gameManager->redTurret->heading, EntityType::REDTANK);
 		}
 	}
-	if((pTwoAimTimer < 0) && keyboard->isKeyDown(OIS::KC_NUMPAD4))
+	if ((pTwoAimTimer < 0) && keyboard->isKeyDown(OIS::KC_NUMPAD4))
 	{
 		pTwoAimTimer = aimTime;
-		engine->gameManager->redTurret->heading -= turnSpeed;		
+		engine->gameManager->redTurret->heading -= turnSpeed;
 	}
-	if((pTwoAimTimer < 0) && keyboard->isKeyDown(OIS::KC_NUMPAD6))
+	if ((pTwoAimTimer < 0) && keyboard->isKeyDown(OIS::KC_NUMPAD6))
 	{
 		pTwoAimTimer = aimTime;
-		engine->gameManager->redTurret->heading += turnSpeed;		
+		engine->gameManager->redTurret->heading += turnSpeed;
 	}
 
 	return true;
@@ -258,12 +266,16 @@ bool InputManager::keyReleased(const OIS::KeyEvent &arg){
 	return true;
 }
 bool InputManager::mouseMoved(const OIS::MouseEvent &arg){
+	if (engine->uiManager->mTrayMgr->injectMouseMove(arg)) return true;
+
 	return true;
 }
 bool InputManager::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id) {
+	if (engine->uiManager->mTrayMgr->injectMouseDown(arg, id)) return true;
 	return true;
 }
 bool InputManager::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id){
+	if (engine->uiManager->mTrayMgr->injectMouseUp(arg, id)) return true;
 	return true;
 }
 

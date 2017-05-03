@@ -7,10 +7,16 @@
 
 #pragma once
 
+class InputManager;
+
 #include "GraphicsManager.h"
 #include "InputManager.h"
 #include "EntityManager.h"
 #include "GameManager.h"
+#include "UIManager.h"
+#include "Types.h"
+
+class EntityManager;
 
 class Engine
 {
@@ -18,7 +24,7 @@ public:
 	Engine();
 	~Engine();
 
-
+	UIManager*          uiManager;
 	EntityManager*      entityManager;
 	GraphicsManager*    graphicsManager;
 	InputManager*       inputManager;
@@ -29,6 +35,11 @@ public:
 	void tick_all(float dt) const;
 	void stop();
 	void shutdown() const;
+	void loadLevel();
 
 	bool keepRunning;
+
+	STATE currentState;
+
+	float timePassed;
 };

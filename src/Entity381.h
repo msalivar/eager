@@ -1,9 +1,9 @@
 /*
- * Entity.h
- *
- *  Created on: Feb 22, 2017
- *      Author: sushil
- */
+* Entity.h
+*
+*  Created on: Feb 22, 2017
+*      Author: sushil
+*/
 
 #pragma once
 
@@ -15,7 +15,7 @@
 class Aspect;
 
 class Entity381 {
-	
+
 public:
 	Entity381(EntityType entityType, Ogre::Vector3 pos);
 	~Entity381();
@@ -43,7 +43,8 @@ public:
 	float reloadTime;
 	int bulletCount;
 	int bulletLimit;
-	bool destroyFlag;
+	EntityState state;
+	EntityType owner;
 
 	unsigned int entityId;
 
@@ -83,4 +84,11 @@ class Bullet : public Entity381
 public:
 	Bullet(Ogre::Vector3 pos, float heading);
 	~Bullet();
+};
+
+class Wall : public Entity381
+{
+public:
+	Wall(Ogre::Vector3 pos, float heading);
+	~Wall();
 };

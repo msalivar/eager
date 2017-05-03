@@ -14,15 +14,12 @@
 #include <SdkTrays.h>
 #include "Manager.h"
 #include "Entity381.h"
-#include "Command.h"
 
 class InputManager : 
 public Manager,
 public OIS::KeyListener,
 public OIS::MouseListener,
-public Ogre::WindowEventListener,
-public OgreBites::SdkTrayListener,
-public Ogre::FrameListener
+public Ogre::WindowEventListener
 {
 private:
 	void UpdateCamera(float dt);
@@ -45,16 +42,17 @@ private:
     bool UpdateLocations(float dt);
 
 protected:
-    void windowResized(Ogre::RenderWindow *rw) override;
-    void windowClosed(Ogre::RenderWindow *rw) override;
-    virtual bool keyPressed(const OIS::KeyEvent &arg);
-    virtual bool keyReleased(const OIS::KeyEvent &arg);
-    virtual bool mouseMoved(const OIS::MouseEvent &arg);
-    virtual bool mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id);
-    virtual bool mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id);
+	virtual void windowResized(Ogre::RenderWindow *rw);
+	virtual void windowClosed(Ogre::RenderWindow *rw);
+
+	virtual bool keyPressed(const OIS::KeyEvent &arg);
+	virtual bool keyReleased(const OIS::KeyEvent &arg);
+	virtual bool mouseMoved(const OIS::MouseEvent &arg);
+	virtual bool mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id);
+	virtual bool mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id);
 
 public:
-    explicit InputManager(Engine *engine);
+    InputManager(Engine *engine);
 	~InputManager(){}
 	void init() override;
 	void tick(float dt) override;

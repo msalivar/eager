@@ -10,11 +10,13 @@
 
 GraphicsManager::GraphicsManager(Engine *eng): Manager(eng)
 {
+	rect = NULL;
+	backgroundNode = NULL;
 
 #ifdef _DEBUG
 	resources = "resources_d.cfg";
 	plugins   = "plugins_d.cfg";
-#else
+#else*/
 	resources = "resources.cfg";
 	plugins   = "plugins.cfg";
 #endif
@@ -24,9 +26,8 @@ GraphicsManager::GraphicsManager(Engine *eng): Manager(eng)
 	cf.load(resources);
 	loadConfig(cf);
 	configureRenderSystem();
-	ogreRenderWindow = ogreRoot->initialise(true, "Team 7 - CS381 Game Engine");
+	ogreRenderWindow = ogreRoot->initialise(true, "Team 7 - Clash of Tanks");
 	createSceneManager();
-	initResources();
 	createCamera();
 	createViewport();
 
@@ -64,8 +65,8 @@ void GraphicsManager::initResources()
 void GraphicsManager::createSceneManager()
 {
 	ogreSceneManager = ogreRoot->createSceneManager(Ogre::ST_GENERIC);
-    overlaySystem = new Ogre::OverlaySystem();
-    ogreSceneManager->addRenderQueueListener(overlaySystem);
+    //overlaySystem = new Ogre::OverlaySystem();
+    //ogreSceneManager->addRenderQueueListener(overlaySystem);
 }
 
 void GraphicsManager::createCamera()
@@ -76,8 +77,8 @@ void GraphicsManager::createCamera()
 	cameraNode = ogreSceneManager->getRootSceneNode()->createChildSceneNode();
 	pitchNode = cameraNode->createChildSceneNode();
 	pitchNode->attachObject(ogreCamera);
-	cameraNode->setPosition(0, 250, 200);
-	ogreCamera->lookAt(0, 0, 0);
+	cameraNode->setPosition(0, 500, 0);
+	ogreCamera->lookAt(0, 0, 1);
 }
 
 void GraphicsManager::createViewport()
@@ -86,6 +87,29 @@ void GraphicsManager::createViewport()
 	ogreViewport->setBackgroundColour(Ogre::ColourValue(0, 0, 0));
 	ogreCamera->setAspectRatio(Ogre::Real(ogreViewport->getActualWidth()) /
 											Ogre::Real(ogreViewport->getActualHeight()));
+
+	Ogre::MaterialPtr material = Ogre::MaterialManager::getSingleton().create("Background", "General");
+	material->getTechnique(0)->getPass(0)->createTextureUnitState("tank.png");
+	material->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
+	material->getTechnique(0)->getPass(0)->setDepthWriteEnabled(false);
+	material->getTechnique(0)->getPass(0)->setLightingEnabled(true);
+
+	// Create background rectangle covering the whole screen
+	rect = new Ogre::Rectangle2D(true);
+	rect->setCorners(-1.0, 1.0, 1.0, -1.0);
+	rect->setMaterial("Background");
+
+	// Render the background before everything else
+	rect->setRenderQueueGroup(Ogre::RENDER_QUEUE_BACKGROUND);
+
+	// Use infinite AAB to always stay visible
+	Ogre::AxisAlignedBox aabInf;
+	aabInf.setInfinite();
+	rect->setBoundingBox(aabInf);
+
+	// Attach background to the scene
+	backgroundNode = ogreSceneManager->getRootSceneNode()->createChildSceneNode("Background");
+	backgroundNode->attachObject(rect);
 }
 
 void GraphicsManager::testScene() const
@@ -102,15 +126,18 @@ void GraphicsManager::testScene() const
 GraphicsManager::~GraphicsManager()
 {
 	delete ogreRoot; //after inputManager destructor
+	delete rect; 
+	rect = NULL;
 }
 
 void GraphicsManager::init()
 {
+	initResources();
 }
 
 void GraphicsManager::loadLevel()
 {
-
+	backgroundNode->detachObject(rect); 
 }
 
 void GraphicsManager::tick(float dt)
@@ -122,4 +149,16 @@ void GraphicsManager::tick(float dt)
 void GraphicsManager::stop()
 {
 	ogreRoot->shutdown();
+}
+
+void GraphicsManager::loadMenu()
+{
+	// Create background material
+	Ogre::MaterialPtr material = Ogre::MaterialManager::getSingleton().create("MenuScreen", "General");
+	material->getTechnique(0)->getPass(0)->createTextureUnitState("tank.png");
+	material->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
+	material->getTechnique(0)->getPass(0)->setDepthWriteEnabled(false);
+	material->getTechnique(0)->getPass(0)->setLightingEnabled(false);
+
+	rect->setMaterial("MenuScreen");
 }

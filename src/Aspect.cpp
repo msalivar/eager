@@ -36,7 +36,7 @@ void Renderable::Tick(float dt)
 		entity->lifeTime -= dt;
 		if (entity->lifeTime <= 0)
 		{
-			entity->destroyFlag = true;
+			entity->state = EntityState::DESTROY;
 		}
 	}
 }
@@ -65,6 +65,5 @@ void Physics::Tick(float dt)
 	if (entity->attachment != nullptr)
 	{
 		entity->attachment->pos = entity->pos;
-	}	
+	}
 }
-

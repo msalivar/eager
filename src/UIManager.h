@@ -19,11 +19,11 @@
 #include <SdkTrays.h>
 
 class UIManager : 
-public Manager, 
-public Ogre::FrameListener, 
-public OIS::KeyListener, 
-public OIS::MouseListener, 
-public Ogre::WindowEventListener, 
+public Manager,
+public Ogre::FrameListener,
+public OIS::KeyListener,
+public OIS::MouseListener,
+public Ogre::WindowEventListener,
 public OgreBites::SdkTrayListener
 {
 private:

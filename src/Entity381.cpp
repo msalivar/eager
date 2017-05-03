@@ -1,13 +1,12 @@
 /*
- * Entity381.cpp
- *
- *  Created on: Feb 22, 2017
- *      Author: sushil
- */
+* Entity381.cpp
+*
+*  Created on: Feb 22, 2017
+*      Author: sushil
+*/
 
 #include "Entity381.h"
 #include "Aspect.h"
-#include "UnitAI.h"
 
 int Entity381::nextId = 0;
 
@@ -21,22 +20,26 @@ Entity381::Entity381(EntityType entType, Ogre::Vector3 pos)
 	this->attachment = nullptr;
 	this->bulletCount = 0;
 	this->bulletLimit = 3;
-	this->destroyFlag = false;
 	this->reloadTime = 4.0f;
+	this->owner = EntityType::NONE;
 
 	if (entityType == EntityType::BULLET)
-		this->lifeTime = 5.0f;
+	{
+		this->state = EntityState::ALIVE;
+		this->lifeTime = 8.0f;
+	}
 	else
+	{
+		this->state = EntityState::NONE;
 		this->lifeTime = 0;
+	}
 
 	this->aspects.clear();
 	Renderable *r = new Renderable(this);
 	Physics *p = new Physics(this);
-	UnitAI *ai = new UnitAI(this);
 
 	this->aspects.push_front(r);
 	this->aspects.push_front(p);
-	this->aspects.push_front(ai);
 
 	this->entityId = Entity381::nextId++;
 
@@ -50,10 +53,10 @@ Entity381::~Entity381()
 
 void Entity381::Tick(float dt)
 {
-    for(const auto& aspect : aspects)
-    {
-        aspect->Tick(dt);
-    }
+	for (const auto& aspect : aspects)
+	{
+		aspect->Tick(dt);
+	}
 	reloadTime -= dt;
 	if (reloadTime <= 0)
 	{
@@ -130,5 +133,16 @@ Bullet::Bullet(Ogre::Vector3 pos, float heading) : Entity381(EntityType::BULLET,
 }
 
 Bullet::~Bullet()
+{
+}
+
+Wall::Wall(Ogre::Vector3 pos, float heading) : Entity381(EntityType::WALL, pos)
+{
+	this->meshfile = "wall.mesh";
+	this->heading = heading;
+	this->desiredHeading = heading;
+}
+
+Wall::~Wall()
 {
 }
