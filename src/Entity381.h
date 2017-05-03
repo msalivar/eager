@@ -1,9 +1,9 @@
 /*
-* Entity.h
-*
-*  Created on: Feb 22, 2017
-*      Author: sushil
-*/
+ * Entity.h
+ *
+ *  Created on: Feb 22, 2017
+ *      Author: sushil
+ */
 
 #pragma once
 
@@ -15,7 +15,7 @@
 class Aspect;
 
 class Entity381 {
-
+	
 public:
 	Entity381(EntityType entityType, Ogre::Vector3 pos);
 	~Entity381();

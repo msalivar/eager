@@ -19,8 +19,10 @@ class GameManager : public Manager
 private:
 	void createEnts();
 	void createSky();
-	void createGround();	
+	void createGround();
 	void createLevelOne();
+	
+	std::list<Entity381*> levelEntities;
 
 public:
     explicit GameManager(Engine *engine);

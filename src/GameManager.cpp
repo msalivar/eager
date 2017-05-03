@@ -49,7 +49,7 @@ void GameManager::tick(float dt)
 	{
 		gameplayTime += dt;
 		//std::cout << "Gameplay time: " << gameplayTime << std::endl;
-	}
+}
 }
 
 void GameManager::createEnts()

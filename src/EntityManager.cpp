@@ -1,9 +1,9 @@
 /*
-* EntityManager.cpp
-*
-*  Created on: Feb 22, 2017
-*      Author: sushil
-*/
+ * EntityManager.cpp
+ *
+ *  Created on: Feb 22, 2017
+ *      Author: sushil
+ */
 
 #include "EntityManager.h"
 #include "Engine.h"
@@ -23,18 +23,18 @@ void EntityManager::tick(float dt)
 {
 	// some serious stuff going on here
 	for (const auto& entity : entities)
-	{
+    {
 		// Bullet specific effects
 		if (entity->entityType == EntityType::BULLET)
 		{
 			HandleBulletState(entity);
-		}
+			}
 
 		// TODO: remove this temporary fix - need a better solution for leftover bullets
 		if (entity->state == EntityState::DEAD) { continue; }
 
 		// Tick aspects
-		entity->Tick(dt);
+        entity->Tick(dt);
 
 		// Check entity bounds
 		if (entity->entityType == EntityType::BULLET ||
@@ -42,8 +42,8 @@ void EntityManager::tick(float dt)
 			entity->entityType == EntityType::REDTANK)
 		{
 			HandleArenaBounds(entity, engine->gameManager->arenaSizeX, engine->gameManager->arenaSizeZ, dt);
-		}
-	}
+    }
+}
 }
 
 void EntityManager::init()
@@ -62,11 +62,11 @@ void EntityManager::CreateOgreEntityAndNode(Entity381 *ent, float scale)
 {
 	if (ent)
 	{
-		ent->ogreEntity =
+		ent->ogreEntity = 
 			engine->graphicsManager->ogreSceneManager->createEntity(
 				std::to_string(Entity381::nextId),
 				ent->meshfile);
-		ent->ogreSceneNode =
+		ent->ogreSceneNode = 
 			engine->graphicsManager->ogreSceneManager->getRootSceneNode()->createChildSceneNode(ent->pos);
 		ent->ogreSceneNode->attachObject(ent->ogreEntity);
 		ent->ogreSceneNode->scale(scale, scale, scale);
