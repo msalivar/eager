@@ -23,7 +23,7 @@ InputManager::InputManager(Engine *engine) : Manager(engine)
 	moveTime = 0.05f;
 	turnTime = 0.05f;
 	aimTime = 0.05f;
-	shootTime = 0.5f;
+	shootTime = 0.7f;
 
 	pOneMoveTimer = moveTime;
 	pOneTurnTimer = turnTime;
@@ -147,6 +147,7 @@ bool InputManager::UpdateLocations(float dt)
 	float moveSpeed = 1;
 	float slowSpeed = 2;
 	float turnSpeed = 0.02f;
+	float aimSpeed = 0.04f;
 
 	pOneMoveTimer -= dt;
 	pOneTurnTimer -= dt;
@@ -199,12 +200,12 @@ bool InputManager::UpdateLocations(float dt)
 	if ((pOneAimTimer < 0) && keyboard->isKeyDown(OIS::KC_G))
 	{		
 		pOneAimTimer = aimTime;
-		engine->gameManager->blueTurret->heading -= turnSpeed;
+		engine->gameManager->blueTurret->heading -= aimSpeed;
 	}
 	if ((pOneAimTimer < 0) && keyboard->isKeyDown(OIS::KC_J))
 	{
 		pOneAimTimer = aimTime;
-		engine->gameManager->blueTurret->heading += turnSpeed;		
+		engine->gameManager->blueTurret->heading += aimSpeed;		
 	}
 
 	// PLAYER 2
@@ -248,12 +249,12 @@ bool InputManager::UpdateLocations(float dt)
 	if ((pTwoAimTimer < 0) && keyboard->isKeyDown(OIS::KC_NUMPAD4))
 	{
 		pTwoAimTimer = aimTime;
-		engine->gameManager->redTurret->heading -= turnSpeed;		
+		engine->gameManager->redTurret->heading -= aimSpeed;		
 	}
 	if ((pTwoAimTimer < 0) && keyboard->isKeyDown(OIS::KC_NUMPAD6))
 	{
 		pTwoAimTimer = aimTime;
-		engine->gameManager->redTurret->heading += turnSpeed;		
+		engine->gameManager->redTurret->heading += aimSpeed;		
 	}
 
 	return true;
