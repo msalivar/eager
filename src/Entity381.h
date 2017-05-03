@@ -17,7 +17,7 @@ class Aspect;
 class Entity381 {
 	
 public:
-	Entity381(EntityType entityType, Ogre::Vector3 pos, float heading);
+	Entity381(EntityType entityType, Ogre::Vector3 pos);
 	~Entity381();
 	void Tick(float dt);
 	void DefaultInit();
@@ -25,7 +25,7 @@ public:
 	//static stuff
 	static int nextId;
 	float maxSpeed, minSpeed;
-	float acceleration, turnRate;
+	float acceleration, deceleration, reverseAcceleration, turnRate;
 	EntityType entityType;
 	std::string meshfile;
 
@@ -34,51 +34,61 @@ public:
 	Ogre::Vector3 vel;
 	Ogre::SceneNode *ogreSceneNode;
 	Ogre::Entity* ogreEntity;
+	Entity381* attachment;
 
 	//Engine stuff dynamic
 	float speed, heading;
 	float desiredSpeed, desiredHeading;
-
-	//selection
-	bool isSelected;
+	float lifeTime;
+	float reloadTime;
+	int bulletCount;
+	int bulletLimit;
+	EntityState state;
+	EntityType owner;
 
 	unsigned int entityId;
 
 	std::list<Aspect*> aspects;
 };
 
-class Ddg : public Entity381 {
-
+class BlueTank : public Entity381
+{
 public:
-	Ddg(Ogre::Vector3 pos, float heading);
-	~Ddg();
-
+	BlueTank(Ogre::Vector3 pos);
+	~BlueTank();
 };
 
-class Cigarette : public Entity381 {
-
+class RedTank : public Entity381
+{
 public:
-	Cigarette(Ogre::Vector3 pos, float heading);
-	~Cigarette();
+	RedTank(Ogre::Vector3 pos);
+	~RedTank();
 };
 
-class Alien : public Entity381 {
-
+class BlueTurret : public Entity381
+{
 public:
-	Alien(Ogre::Vector3 pos, float heading);
-	~Alien();
+	BlueTurret(Ogre::Vector3 pos);
+	~BlueTurret();
 };
 
-class Cvn : public Entity381 {
-
+class RedTurret : public Entity381
+{
 public:
-	Cvn(Ogre::Vector3 pos, float heading);
-	~Cvn();
+	RedTurret(Ogre::Vector3 pos);
+	~RedTurret();
 };
 
-class Frigate : public Entity381 {
-
+class Bullet : public Entity381
+{
 public:
-	Frigate(Ogre::Vector3 pos, float heading);
-	~Frigate();
+	Bullet(Ogre::Vector3 pos, float heading);
+	~Bullet();
+};
+
+class Wall : public Entity381
+{
+public:
+	Wall(Ogre::Vector3 pos, float heading);
+	~Wall();
 };

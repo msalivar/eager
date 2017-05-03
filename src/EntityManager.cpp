@@ -7,22 +7,43 @@
 
 #include "EntityManager.h"
 #include "Engine.h"
+#include <string.h>
 
-EntityManager::EntityManager(Engine *eng): Manager(eng)
+EntityManager::EntityManager(Engine *eng) : Manager(eng)
 {
 	entities.clear();
 }
 
 EntityManager::~EntityManager()
 {
+	entities.clear();
 }
 
 void EntityManager::tick(float dt)
 {
-    for(const auto& entity : entities)
+	// some serious stuff going on here
+	for (const auto& entity : entities)
     {
+		// Bullet specific effects
+		if (entity->entityType == EntityType::BULLET)
+		{
+			HandleBulletState(entity);
+			}
+
+		// TODO: remove this temporary fix - need a better solution for leftover bullets
+		if (entity->state == EntityState::DEAD) { continue; }
+
+		// Tick aspects
         entity->Tick(dt);
+
+		// Check entity bounds
+		if (entity->entityType == EntityType::BULLET ||
+			entity->entityType == EntityType::BLUETANK ||
+			entity->entityType == EntityType::REDTANK)
+		{
+			HandleArenaBounds(entity, engine->gameManager->arenaSizeX, engine->gameManager->arenaSizeZ, dt);
     }
+}
 }
 
 void EntityManager::init()
@@ -37,42 +58,40 @@ void EntityManager::stop()
 {
 }
 
-void EntityManager::CreateOgreEntityAndNode(Entity381 *ent)
+void EntityManager::CreateOgreEntityAndNode(Entity381 *ent, float scale)
 {
-
 	if (ent)
 	{
-		ent->ogreEntity = engine->graphicsManager->ogreSceneManager->createEntity(ent->meshfile);
-		ent->ogreSceneNode = engine->graphicsManager->ogreSceneManager->getRootSceneNode()->createChildSceneNode(ent->pos);
+		ent->ogreEntity = 
+			engine->graphicsManager->ogreSceneManager->createEntity(
+				std::to_string(Entity381::nextId),
+				ent->meshfile);
+		ent->ogreSceneNode = 
+			engine->graphicsManager->ogreSceneManager->getRootSceneNode()->createChildSceneNode(ent->pos);
 		ent->ogreSceneNode->attachObject(ent->ogreEntity);
-		ent->ogreSceneNode->yaw(Ogre::Radian(ent->heading));
+		ent->ogreSceneNode->scale(scale, scale, scale);
 	}
-
 }
 
-Entity381* EntityManager::CreateEntity(EntityType entityType, Ogre::Vector3 position, float heading)
+Entity381* EntityManager::CreateEntity(EntityType entityType, Ogre::Vector3 position)
 {
-
-	Entity381 *ent = 0;// = new Entity381(entityType, position, heading);
+	Entity381 *ent = 0;
 	switch (entityType)
 	{
-	case EntityType::ALIEN:
-		ent = new Alien(position, heading);
+	case EntityType::BLUETANK:
+		ent = new BlueTank(position);
 		break;
-	case EntityType::CIGARETTE:
-		ent = new Cigarette(position, heading);
+	case EntityType::BLUETURRET:
+		ent = new BlueTurret(position);
 		break;
-	case EntityType::DDG:
-		ent = new Ddg(position, heading);
+	case EntityType::REDTANK:
+		ent = new RedTank(position);
 		break;
-	case EntityType::CVN:
-		ent = new Cvn(position, heading);
-		break;
-	case EntityType::FRIGATE:
-		ent = new Frigate(position, heading);
+	case EntityType::REDTURRET:
+		ent = new RedTurret(position);
 		break;
 	default:
-		ent = new Ddg(position, heading);
+		ent = new BlueTank(position);
 		break;
 	}
 
@@ -81,27 +100,80 @@ Entity381* EntityManager::CreateEntity(EntityType entityType, Ogre::Vector3 posi
 	return ent;
 }
 
-void EntityManager::SelectNextEntity()
+Entity381* EntityManager::CreateProjectile(Ogre::Vector3 position, float heading, EntityType owner)
 {
-	int n = 0;
+	Entity381 *ent = 0;
+	ent = new Bullet(position, heading);
+	CreateOgreEntityAndNode(ent, 5);
+	entities.push_front(ent);
+	ent->owner = owner;
+	return ent;
+}
 
-	for (std::list<Entity381 *>::const_iterator it = entities.begin(); it != entities.end(); ++it)
+Entity381* EntityManager::CreateWall(Ogre::Vector3 position, float heading)
+{
+	Entity381 *ent = 0;
+	ent = new Wall(position, heading);
+	CreateOgreEntityAndNode(ent, 5);
+	entities.push_front(ent);
+	return ent;
+}
+
+bool EntityManager::CheckForBulletCollision(Entity381* bullet, Entity381* object)
+{
+	Ogre::Real distance = bullet->pos.distance(object->pos);
+	return distance <= object->ogreEntity->getBoundingRadius();
+}
+
+void EntityManager::HandleBulletState(Entity381* entity)
+{
+	// Check for bullet collision
+	if (entity->state == EntityState::ALIVE)
 	{
-		n++;
-		if ((*it)->isSelected) {
-			(*it)->isSelected = false;
-			it++;
-			if (it == entities.end()) {
-				std::cout << "End of ents" << std::endl;
-				selectedEntity = *(entities.begin());
-			}
-			else {
-				selectedEntity = *it;
-				std::cout << "End of ents" << std::endl;
-			}
-			selectedEntity->isSelected = true;
-			break;
+		if (entity->owner == EntityType::REDTANK &&
+			CheckForBulletCollision(entity, engine->gameManager->blueTank))
+		{
+			entity->state = EntityState::DESTROY;
+		}
+		else if (entity->owner == EntityType::BLUETANK &&
+			CheckForBulletCollision(entity, engine->gameManager->redTank))
+		{
+			entity->state = EntityState::DESTROY;
 		}
 	}
+	// Check for destroy flag
+	if (entity->state == EntityState::DESTROY)
+	{
+		entity->aspects.clear();
+		engine->graphicsManager->ogreSceneManager->destroyEntity(entity->ogreEntity);
+		entity->ogreEntity = nullptr;
+		entity->ogreSceneNode = nullptr;
+		if (entity->attachment != nullptr)
+		{
+			entity->attachment->state = EntityState::DESTROY;
+		}
+		entity->state = EntityState::DEAD;
+	}
+}
 
+void EntityManager::HandleArenaBounds(Entity381* entity, int arenaSizeX, int arenaSizeZ, float dt)
+{
+	// Check bounds
+	if (entity->pos.x >= arenaSizeX || entity->pos.x <= -arenaSizeX ||
+		entity->pos.z >= arenaSizeZ || entity->pos.z <= -arenaSizeZ)
+	{
+		if (entity->entityType == EntityType::BULLET)
+		{
+			entity->state = EntityState::DESTROY;
+		}
+		else if (entity->entityType == EntityType::BLUETANK
+			|| entity->entityType == EntityType::REDTANK)
+		{
+			entity->speed = 0;
+			entity->desiredSpeed = 0;
+			// Move tank towards middle slowly
+			Ogre::Vector3 dirToMiddle = Ogre::Vector3(0, 0, 1) - entity->pos;
+			entity->pos += dirToMiddle * dt;
+		}
+	}
 }

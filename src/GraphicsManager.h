@@ -32,26 +32,35 @@ public:
     void loadLevel() override;
     void stop() override;
 
+	void loadMenu();
+
+	void testScene() const;
+
 	//Ogre variables
-	Ogre::Camera* ogreCamera;
+	Ogre::Root *ogreRoot;
+
 	Ogre::String resources;
 	Ogre::String plugins;
 	Ogre::ConfigFile cf;
-	Ogre::Root *ogreRoot;
+	Ogre::Camera* ogreCamera;
 	Ogre::RenderWindow* ogreRenderWindow;
 	Ogre::SceneManager* ogreSceneManager;
 	Ogre::SceneNode *cameraNode, *pitchNode;
     Ogre::OverlaySystem* overlaySystem;
 
-	void testScene() const;
+	Ogre::Rectangle2D* rect;
+	Ogre::SceneNode* backgroundNode;
+	Ogre::SceneNode* splashNode;
+
 
 private:
 	void loadConfig(Ogre::ConfigFile cf) const;
 	void configureRenderSystem() const;
-    static void initResources();
+    void initResources();
 
 	void createSceneManager();
 	void createCamera();
+
 	Ogre::Viewport *ogreViewport;
 	void createViewport();
 

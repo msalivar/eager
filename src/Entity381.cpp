@@ -1,33 +1,45 @@
 /*
- * Entity381.cpp
- *
- *  Created on: Feb 22, 2017
- *      Author: sushil
- */
+* Entity381.cpp
+*
+*  Created on: Feb 22, 2017
+*      Author: sushil
+*/
 
 #include "Entity381.h"
 #include "Aspect.h"
-#include "UnitAI.h"
 
 int Entity381::nextId = 0;
 
-Entity381::Entity381(EntityType entType, Ogre::Vector3 pos, float heading)
+Entity381::Entity381(EntityType entType, Ogre::Vector3 pos)
 {
-	entityType = entType;
+	this->entityType = entType;
 	this->pos = pos;
 	this->heading = heading;
 	this->vel = Ogre::Vector3::ZERO;
 	this->speed = 0;
-	this->isSelected = false;
+	this->attachment = nullptr;
+	this->bulletCount = 0;
+	this->bulletLimit = 3;
+	this->reloadTime = 4.0f;
+	this->owner = EntityType::NONE;
+
+	if (entityType == EntityType::BULLET)
+	{
+		this->state = EntityState::ALIVE;
+		this->lifeTime = 8.0f;
+	}
+	else
+	{
+		this->state = EntityState::NONE;
+		this->lifeTime = 0;
+	}
 
 	this->aspects.clear();
 	Renderable *r = new Renderable(this);
 	Physics *p = new Physics(this);
-	UnitAI *ai = new UnitAI(this);
 
 	this->aspects.push_front(r);
 	this->aspects.push_front(p);
-	this->aspects.push_front(ai);
 
 	this->entityId = Entity381::nextId++;
 
@@ -41,83 +53,96 @@ Entity381::~Entity381()
 
 void Entity381::Tick(float dt)
 {
-    for(const auto& aspect : aspects)
-    {
-        aspect->Tick(dt);
-    }
+	for (const auto& aspect : aspects)
+	{
+		aspect->Tick(dt);
+	}
+	reloadTime -= dt;
+	if (reloadTime <= 0)
+	{
+		reloadTime = 4.0f;
+		bulletCount = 0;
+	}
 }
 
 void Entity381::DefaultInit()
 {
-	this->acceleration = 0.5f;
+	this->acceleration = 8.0f;
+	this->deceleration = 15.0f;
+	this->reverseAcceleration = 3.0f;
 	this->turnRate = 0.2f;
 
-	this->maxSpeed = 100;
-	this->minSpeed = 0;
+	this->maxSpeed = 35.0f;
+	this->minSpeed = -25.0f;
 
-	this->desiredHeading = 0;
+	this->desiredHeading = this->heading;
 	this->desiredSpeed = 0;
 
 	this->meshfile = "cube.mesh";
 
 }
 
-Ddg::Ddg(Ogre::Vector3 pos, float heading) : Entity381(EntityType::DDG, pos, heading)
+BlueTank::BlueTank(Ogre::Vector3 pos) : Entity381(EntityType::BLUETANK, pos)
 {
-	this->meshfile = "ddg51.mesh";
-	this->acceleration = 1.0f;
-	this->turnRate = 0.1f;
-	this->maxSpeed = 35;
+	this->meshfile = "blueTank.mesh";
+	this->heading = 0;
 }
 
-Ddg::~Ddg() 
+BlueTank::~BlueTank()
 {
 }
 
-Cigarette::Cigarette(Ogre::Vector3 pos, float heading) : Entity381(EntityType::CIGARETTE, pos, heading)
+RedTank::RedTank(Ogre::Vector3 pos) : Entity381(EntityType::REDTANK, pos)
 {
-	this->meshfile = "cigarette.mesh";
-	this->acceleration = 1.5f;
-	this->turnRate = 0.3f;
-	this->maxSpeed = 30;
+	this->meshfile = "redTank.mesh";
+	this->heading = 0;
 }
 
-Cigarette::~Cigarette()
+RedTank::~RedTank()
 {
 }
 
-Alien::Alien(Ogre::Vector3 pos, float heading) : Entity381(EntityType::ALIEN, pos, heading)
+BlueTurret::BlueTurret(Ogre::Vector3 pos) : Entity381(EntityType::BLUETURRET, pos)
 {
-	this->meshfile = "alienship.mesh";
-	this->turnRate = 0.5f;
-	this->acceleration = 1.8f;
-	this->maxSpeed = 40;
+	this->meshfile = "blueTurret.mesh";
+	this->heading = 0;
 }
 
-Alien::~Alien()
+BlueTurret::~BlueTurret()
 {
 }
 
-Cvn::Cvn(Ogre::Vector3 pos, float heading) : Entity381(EntityType::CVN, pos, heading)
+RedTurret::RedTurret(Ogre::Vector3 pos) : Entity381(EntityType::REDTURRET, pos)
 {
-	this->meshfile = "cvn68.mesh";
-	this->turnRate = 0.05f;
-	this->acceleration = 0.75f;
-	this->maxSpeed = 40;
+	this->meshfile = "redTurret.mesh";
+	this->heading = 0;
 }
 
-Cvn::~Cvn()
+RedTurret::~RedTurret()
 {
 }
 
-Frigate::Frigate(Ogre::Vector3 pos, float heading) : Entity381(EntityType::FRIGATE, pos, heading)
+Bullet::Bullet(Ogre::Vector3 pos, float heading) : Entity381(EntityType::BULLET, pos)
 {
-	this->meshfile = "sleek.mesh";
-	this->turnRate = 0.15f;
-	this->acceleration = 1.1f;
-	this->maxSpeed = 25;
+	this->meshfile = "bullet.mesh";
+	this->desiredSpeed = 50;
+	this->maxSpeed = 50;
+	this->speed = 50;
+	this->heading = heading;
+	this->desiredHeading = heading;
 }
 
-Frigate::~Frigate()
+Bullet::~Bullet()
+{
+}
+
+Wall::Wall(Ogre::Vector3 pos, float heading) : Entity381(EntityType::WALL, pos)
+{
+	this->meshfile = "wall.mesh";
+	this->heading = heading;
+	this->desiredHeading = heading;
+}
+
+Wall::~Wall()
 {
 }

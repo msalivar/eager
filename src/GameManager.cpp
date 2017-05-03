@@ -7,20 +7,20 @@
 
 #include "GameManager.h"
 #include "Engine.h"
+#include <OgreMeshManager.h>
 
 GameManager::GameManager(Engine *engine): Manager(engine)
 {
 	ocean = Ogre::Plane(Ogre::Vector3::UNIT_Y, 0);
+	gameplayTime = 0;
 }
 
 GameManager::~GameManager()
 {
-
 }
 
 void GameManager::init()
 {
-
 }
 
 void GameManager::loadLevel()
@@ -30,53 +30,53 @@ void GameManager::loadLevel()
 	Ogre::Light* light = engine->graphicsManager->ogreSceneManager->createLight("MainLight");
 	light->setPosition(20.0, 80.0, 50.0);
 
-	createEnts();
-	createSky();
 	createGround();
+	createSky();
+	createEnts();
+	createLevelOne();
+
+	this->loadObjects();
 }
 
 void GameManager::stop()
 {
-
 }
 
 void GameManager::tick(float dt)
 {
-
+	// ADDED CODE
+	if (engine->currentState == STATE::GAMEPLAY)
+	{
+		gameplayTime += dt;
+		//std::cout << "Gameplay time: " << gameplayTime << std::endl;
+}
 }
 
 void GameManager::createEnts()
 {
-	Entity381 * ent;
-	int x = 0;
-	ent = engine->entityManager->CreateEntity(EntityType::DDG, Ogre::Vector3(x, 0, 0), 0);
-	std::cout << "Created: " << ent->meshfile << std::endl;
-	x = x + 200;
-	ent = engine->entityManager->CreateEntity(EntityType::CIGARETTE, Ogre::Vector3(x, 0, 0), 0);
-	std::cout << "Created: " << ent->meshfile << std::endl;
-	x = x + 200;
-	ent = engine->entityManager->CreateEntity(EntityType::ALIEN, Ogre::Vector3(x, 0, 0), 0);
-	std::cout << "Created: " << ent->meshfile << std::endl;
-	x = x + 200;
-	ent = engine->entityManager->CreateEntity(EntityType::CVN, Ogre::Vector3(x, 0, 0), 0);
-	std::cout << "Created: " << ent->meshfile << std::endl;
-	x = x + 300;
-	ent = engine->entityManager->CreateEntity(EntityType::FRIGATE, Ogre::Vector3(x, 0, 0), 0);
-	std::cout << "Created: " << ent->meshfile << std::endl;
-	
-	engine->entityManager->selectedEntity = ent;
-	ent->isSelected = true;
+	blueTank = engine->entityManager->CreateEntity(EntityType::BLUETANK, Ogre::Vector3(200, 0, 100));
+	blueTurret = engine->entityManager->CreateEntity(EntityType::BLUETURRET, Ogre::Vector3(200, 0, 100));
+	blueTank->attachment = blueTurret;
+	blueTank->heading = 3.14159f;
+	blueTurret->heading = 3.14159f;
+
+	redTank = engine->entityManager->CreateEntity(EntityType::REDTANK, Ogre::Vector3(-200, 0, -100));
+	redTurret = engine->entityManager->CreateEntity(EntityType::REDTURRET, Ogre::Vector3(-200, 0, -100));
+	redTank->attachment = redTurret;
+
+	//Ogre::Real radius = blueTank->ogreEntity->getBoundingRadius();
+	//Ogre::AxisAlignedBox box = blueTank->ogreEntity->getBoundingBox();
+	return;
 }
 
 void GameManager::createGround()
 {
 	//Ogre::Plane plane(Ogre::Vector3::UNIT_Y, 0);
-
 	Ogre::MeshManager::getSingleton().createPlane(
 		"ground",
 		Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
 		ocean,
-		15000, 15000, 20, 20,
+		1500, 1500, 20, 20,
 		true,
 		1, 5, 5,
 		Ogre::Vector3::UNIT_Z);
@@ -84,13 +84,70 @@ void GameManager::createGround()
 	Ogre::Entity* groundEntity = engine->graphicsManager->ogreSceneManager->createEntity("ground");
 	engine->graphicsManager->ogreSceneManager->getRootSceneNode()->createChildSceneNode()->attachObject(groundEntity);
 	groundEntity->setCastShadows(false);
-	//groundEntity->setMaterialName("OceanHLSL_GLSL");
-	groundEntity->setMaterialName("Ocean2_HLSL_GLSL");
-	//groundEntity->setMaterialName("Ocean2_Cg");
-	//groundEntity->setMaterialName("NavyCg");
+	groundEntity->setMaterialName("Examples/GrassFloor");
 }
 
 void GameManager::createSky()
 {
 	engine->graphicsManager->ogreSceneManager->setSkyBox(true, "Examples/StormySkyBox");
+}
+
+void GameManager::loadObjects()
+{
+	// Create Entity
+	Ogre::Entity *splash = engine->graphicsManager->ogreSceneManager->createEntity("Splash.mesh");
+
+	// Create scene node for this entity
+	engine->graphicsManager->splashNode = engine->graphicsManager->ogreSceneManager->getRootSceneNode()->createChildSceneNode();
+	engine->graphicsManager->splashNode->attachObject(splash);
+	splash->setMaterialName("Material");
+	engine->graphicsManager->splashNode->setScale(10.f, 10.0f, 10.0f);
+	engine->graphicsManager->splashNode->setPosition(0.0f, 400, -3500);
+	engine->graphicsManager->splashNode->roll(Ogre::Degree(-360));
+	engine->graphicsManager->splashNode->pitch(Ogre::Degree(90));
+}
+
+void GameManager::createLevelOne()
+{
+	int buffer = 20;
+	int increment = 75;
+	arenaSizeX = 275;
+	arenaSizeZ = 175;
+	Entity381 *ent;
+	// left walls
+	int z = 20;
+	ent = engine->entityManager->CreateWall(Ogre::Vector3(arenaSizeX + buffer, 0, arenaSizeZ - z), 0); z += increment;
+	ent = engine->entityManager->CreateWall(Ogre::Vector3(arenaSizeX + buffer, 0, arenaSizeZ - z), 0); z += increment;
+	ent = engine->entityManager->CreateWall(Ogre::Vector3(arenaSizeX + buffer, 0, arenaSizeZ - z), 0); z += increment;
+	ent = engine->entityManager->CreateWall(Ogre::Vector3(arenaSizeX + buffer, 0, arenaSizeZ - z), 0); z += increment;
+	ent = engine->entityManager->CreateWall(Ogre::Vector3(arenaSizeX + buffer, 0, arenaSizeZ - z), 0);
+	// right walls
+	z = 20;
+	ent = engine->entityManager->CreateWall(Ogre::Vector3(-arenaSizeX - buffer, 0, arenaSizeZ - z), 0); z += increment;
+	ent = engine->entityManager->CreateWall(Ogre::Vector3(-arenaSizeX - buffer, 0, arenaSizeZ - z), 0); z += increment;
+	ent = engine->entityManager->CreateWall(Ogre::Vector3(-arenaSizeX - buffer, 0, arenaSizeZ - z), 0); z += increment;
+	ent = engine->entityManager->CreateWall(Ogre::Vector3(-arenaSizeX - buffer, 0, arenaSizeZ - z), 0); z += increment;
+	ent = engine->entityManager->CreateWall(Ogre::Vector3(-arenaSizeX - buffer, 0, arenaSizeZ - z), 0);
+	// top walls
+	z = 15;
+	increment = 74;
+	ent = engine->entityManager->CreateWall(Ogre::Vector3(arenaSizeX - z, 0, arenaSizeZ + buffer), 1.5708f); z += increment;
+	ent = engine->entityManager->CreateWall(Ogre::Vector3(arenaSizeX - z, 0, arenaSizeZ + buffer), 1.5708f); z += increment;
+	ent = engine->entityManager->CreateWall(Ogre::Vector3(arenaSizeX - z, 0, arenaSizeZ + buffer), 1.5708f); z += increment;
+	ent = engine->entityManager->CreateWall(Ogre::Vector3(arenaSizeX - z, 0, arenaSizeZ + buffer), 1.5708f); z += increment;
+	ent = engine->entityManager->CreateWall(Ogre::Vector3(arenaSizeX - z, 0, arenaSizeZ + buffer), 1.5708f); z += increment;
+	ent = engine->entityManager->CreateWall(Ogre::Vector3(arenaSizeX - z, 0, arenaSizeZ + buffer), 1.5708f); z += increment;
+	ent = engine->entityManager->CreateWall(Ogre::Vector3(arenaSizeX - z, 0, arenaSizeZ + buffer), 1.5708f); z += increment;
+	ent = engine->entityManager->CreateWall(Ogre::Vector3(arenaSizeX - z, 0, arenaSizeZ + buffer), 1.5708f);
+	// bottom walls
+	z = 15;
+	increment = 74;
+	ent = engine->entityManager->CreateWall(Ogre::Vector3(arenaSizeX - z, 0, -arenaSizeZ - buffer + 5), 1.5708f); z += increment;
+	ent = engine->entityManager->CreateWall(Ogre::Vector3(arenaSizeX - z, 0, -arenaSizeZ - buffer + 5), 1.5708f); z += increment;
+	ent = engine->entityManager->CreateWall(Ogre::Vector3(arenaSizeX - z, 0, -arenaSizeZ - buffer + 5), 1.5708f); z += increment;
+	ent = engine->entityManager->CreateWall(Ogre::Vector3(arenaSizeX - z, 0, -arenaSizeZ - buffer + 5), 1.5708f); z += increment;
+	ent = engine->entityManager->CreateWall(Ogre::Vector3(arenaSizeX - z, 0, -arenaSizeZ - buffer + 5), 1.5708f); z += increment;
+	ent = engine->entityManager->CreateWall(Ogre::Vector3(arenaSizeX - z, 0, -arenaSizeZ - buffer + 5), 1.5708f); z += increment;
+	ent = engine->entityManager->CreateWall(Ogre::Vector3(arenaSizeX - z, 0, -arenaSizeZ - buffer + 5), 1.5708f); z += increment;
+	ent = engine->entityManager->CreateWall(Ogre::Vector3(arenaSizeX - z, 0, -arenaSizeZ - buffer + 5), 1.5708f);
 }

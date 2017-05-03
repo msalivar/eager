@@ -5,7 +5,7 @@
  *      Author: sushil
  */
 
-#include "engine.h"
+#include "Engine.h"
 #include <OgreTimer.h>
 
 Engine::Engine()
@@ -14,7 +14,11 @@ Engine::Engine()
 	inputManager = nullptr;
 	entityManager = nullptr;
 	gameManager = nullptr;
+	uiManager = nullptr;
 	keepRunning = true;
+
+	currentState = STATE::SPLASH;
+	timePassed = 0;
 }
 
 Engine::~Engine()
@@ -33,18 +37,14 @@ void Engine::initialize()
     inputManager = new InputManager(this);
     entityManager = new EntityManager(this);
     gameManager = new GameManager(this);
+	uiManager = new UIManager(this);
 
     // initialize
     graphicsManager->init();
     inputManager->init();
     entityManager->init();
     gameManager->init();
-
-    // load level to play
-    graphicsManager->loadLevel();
-    inputManager->loadLevel();
-    entityManager->loadLevel();
-    gameManager->loadLevel();
+	uiManager->init();
 }
 
 void Engine::tick_all(float dt) const
@@ -54,6 +54,7 @@ void Engine::tick_all(float dt) const
 	inputManager->tick(dt); if (!keepRunning) return;
 	entityManager->tick(dt); if (!keepRunning) return;
 	gameManager->tick(dt); 
+	uiManager->tick(dt);
 }
 
 void Engine::shutdown() const
@@ -62,6 +63,7 @@ void Engine::shutdown() const
 	graphicsManager->stop();
 	entityManager->stop();
 	gameManager->stop();
+	uiManager->stop();
 }
 
 void Engine::run() const
@@ -78,4 +80,14 @@ void Engine::run() const
 		tick_all(dt);
 	}
 	shutdown();
+}
+
+void Engine::loadLevel()
+{
+	// load level to play
+	graphicsManager->loadLevel();
+	inputManager->loadLevel();
+	entityManager->loadLevel();
+	gameManager->loadLevel();
+	uiManager->loadLevel();
 }

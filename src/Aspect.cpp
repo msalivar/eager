@@ -31,10 +31,14 @@ void Renderable::Tick(float dt)
 	entity->ogreSceneNode->setPosition(entity->pos);
 	entity->ogreSceneNode->setOrientation(Ogre::Quaternion::IDENTITY);
 	entity->ogreSceneNode->yaw(Ogre::Radian(-entity->heading));
-	if (entity->isSelected)
-		entity->ogreSceneNode->showBoundingBox(true);
-	else
-		entity->ogreSceneNode->showBoundingBox(false);
+	if (entity->entityType == EntityType::BULLET)
+	{
+		entity->lifeTime -= dt;
+		if (entity->lifeTime <= 0)
+		{
+			entity->state = EntityState::DESTROY;
+		}
+	}
 }
 
 Physics::Physics(Entity381 * ent) : Aspect(ent)
@@ -47,34 +51,19 @@ Physics::~Physics()
 
 }
 
-//static float FixAngle(float radiansAngle){
-//
-//	while (radiansAngle > Ogre::Math::TWO_PI)
-//		radiansAngle -= Ogre::Math::TWO_PI;
-//	while (radiansAngle < 0)
-//		radiansAngle += Ogre::Math::TWO_PI;
-//
-//	return radiansAngle;
-//}
-//static float RadToDegree = 57.2958; //180/pi
-
 void Physics::Tick(float dt)
 {
 	if (entity->speed < entity->desiredSpeed)
-		entity->speed += entity->acceleration *dt;
-	if (entity->speed > entity->desiredSpeed)
-		entity->speed -= entity->acceleration *dt;
-
-	//entity->speed = std::max(entity->minSpeed, std::min(entity->speed, entity->maxSpeed)); //clamp
-
-	if (entity->heading < entity->desiredHeading)
-		entity->heading += entity->turnRate * dt;
-	if (entity->heading > entity->desiredHeading)
-		entity->heading -= entity->turnRate * dt;
-
-	//entity->heading = FixAngle(entity->heading); // between -pi and pi
+		entity->speed += entity->acceleration * dt;
+	else if (entity->speed > entity->desiredSpeed && entity->speed > 0)
+		entity->speed -= entity->deceleration * dt;
+	else if (entity->speed > entity->desiredSpeed && entity->speed <= 0)
+		entity->speed -= entity->reverseAcceleration * dt;
 
 	entity->vel = Ogre::Vector3(cos(entity->heading) * entity->speed, 0, sin(entity->heading) * entity->speed);
 	entity->pos += entity->vel * dt;
+	if (entity->attachment != nullptr)
+	{
+		entity->attachment->pos = entity->pos;
+	}
 }
-

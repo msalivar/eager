@@ -14,50 +14,45 @@
 #include <SdkTrays.h>
 #include "Manager.h"
 #include "Entity381.h"
-#include "Command.h"
 
 class InputManager : 
 public Manager,
 public OIS::KeyListener,
 public OIS::MouseListener,
-public Ogre::WindowEventListener,
-public OgreBites::SdkTrayListener,
-public Ogre::FrameListener
+public Ogre::WindowEventListener
 {
 private:
 	void UpdateCamera(float dt);
-	void UpdateDesiredSpeedHeading(float dt);
-	void UpdateSelection(float dt);
-	void HandleSingleSelection();
-	void HandleCommand();
-	Ogre::Vector3 GetPositionUnderMouse();
-	Entity381* GetClosestEntityToPosition(Ogre::Vector3 position);
-	void CommandMoveTo(Ogre::Vector3 position);
-	void CommandFollow(Entity381* entity);
-	void CommandIntercept(Entity381* entity);
-	void AddOrSetCommand(Entity381* ent, Command* command);
 
-	float keyboardTimer;
-	float selectionTimer;
-	float keyTime;
-	float selectionTime;
-	Ogre::Vector3 posUnderMouse;
-	float selectionDistanceSquaredThreshold;
+	float pOneMoveTimer;
+	float pOneTurnTimer;
+	float pOneAimTimer;
+	float pOneShootTimer;
+
+	float pTwoMoveTimer;
+	float pTwoTurnTimer;
+	float pTwoAimTimer;
+	float pTwoShootTimer;
+
+	float moveTime;
+	float turnTime;
+	float aimTime;
+	float shootTime;
+
+    bool UpdateLocations(float dt);
 
 protected:
-    void windowResized(Ogre::RenderWindow *rw) override;
-    void windowClosed(Ogre::RenderWindow *rw) override;
+	virtual void windowResized(Ogre::RenderWindow *rw);
+	virtual void windowClosed(Ogre::RenderWindow *rw);
 
-    bool keyPressed(const OIS::KeyEvent &arg) override;
-    bool keyReleased(const OIS::KeyEvent &arg) override;
-    bool mouseMoved(const OIS::MouseEvent &arg) override;
-    bool mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id) override;
-    bool mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id) override;
-
-    bool frameRenderingQueued(const Ogre::FrameEvent& evt) override;
+	virtual bool keyPressed(const OIS::KeyEvent &arg);
+	virtual bool keyReleased(const OIS::KeyEvent &arg);
+	virtual bool mouseMoved(const OIS::MouseEvent &arg);
+	virtual bool mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id);
+	virtual bool mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id);
 
 public:
-    explicit InputManager(Engine *engine);
+    InputManager(Engine *engine);
 	~InputManager(){}
 	void init() override;
 	void tick(float dt) override;
