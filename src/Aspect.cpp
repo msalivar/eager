@@ -67,5 +67,3 @@ void Physics::Tick(float dt)
 		entity->attachment->pos = entity->pos;
 	}
 }
-
->>>>>>> 0093840cdaeb951aa8dc58f6aeab12870cdf357e
