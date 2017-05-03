@@ -65,6 +65,6 @@ void Physics::Tick(float dt)
 	if (entity->attachment != nullptr)
 	{
 		entity->attachment->pos = entity->pos;
-	}	
+	}
 }
 

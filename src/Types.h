@@ -8,7 +8,8 @@ enum class EntityType {
 	REDTANK,
 	REDTURRET,
 	BULLET,
-	NONE
+	NONE,
+	WALL
 };
 
 enum class ASPECT_TYPE {

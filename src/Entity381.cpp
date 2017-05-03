@@ -26,7 +26,7 @@ Entity381::Entity381(EntityType entType, Ogre::Vector3 pos)
 	if (entityType == EntityType::BULLET)
 	{
 		this->state = EntityState::ALIVE;
-		this->lifeTime = 5.0f;
+		this->lifeTime = 8.0f;
 	}
 	else
 	{
@@ -133,5 +133,16 @@ Bullet::Bullet(Ogre::Vector3 pos, float heading) : Entity381(EntityType::BULLET,
 }
 
 Bullet::~Bullet()
+{
+}
+
+Wall::Wall(Ogre::Vector3 pos, float heading) : Entity381(EntityType::WALL, pos)
+{
+	this->meshfile = "wall.mesh";
+	this->heading = heading;
+	this->desiredHeading = heading;
+}
+
+Wall::~Wall()
 {
 }

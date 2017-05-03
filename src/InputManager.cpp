@@ -202,7 +202,7 @@ bool InputManager::UpdateLocations(float dt)
 	if((pTwoMoveTimer < 0) && keyboard->isKeyDown(OIS::KC_UP))
 	{
 		pTwoMoveTimer = moveTime;
-		if (engine->gameManager->redTank->desiredSpeed > engine->gameManager->redTank->minSpeed)
+		if (engine->gameManager->redTank->desiredSpeed < engine->gameManager->redTank->maxSpeed)
 			engine->gameManager->redTank->desiredSpeed += moveSpeed;		
 	}
 	if((pTwoTurnTimer < 0) && keyboard->isKeyDown(OIS::KC_LEFT))

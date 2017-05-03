@@ -31,8 +31,11 @@ public:
 
 	Entity381* CreateEntity(EntityType entityType, Ogre::Vector3 pos);
 	Entity381* CreateProjectile(Ogre::Vector3 position, float heading, EntityType owner);
+	Entity381* CreateWall(Ogre::Vector3 position, float heading);
 	void CreateOgreEntityAndNode(Entity381 *ent, float scale = 1);
 	bool CheckForBulletCollision(Entity381* bullet, Entity381* object);
+	void HandleBulletState(Entity381* entity);
+	void HandleArenaBounds(Entity381* entity, int arenaSizeX, int arenaSizeZ, float dt);
 
 	std::list<Entity381 *> entities;
 

@@ -85,3 +85,10 @@ public:
 	Bullet(Ogre::Vector3 pos, float heading);
 	~Bullet();
 };
+
+class Wall : public Entity381
+{
+public:
+	Wall(Ogre::Vector3 pos, float heading);
+	~Wall();
+};

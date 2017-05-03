@@ -17,6 +17,9 @@ private:
 	void createEnts();
 	void createSky();
 	void createGround();
+	void createLevelOne();
+	
+	std::list<Entity381*> levelEntities;
 
 public:
     explicit GameManager(Engine *engine);
@@ -32,4 +35,6 @@ public:
 	Entity381* blueTurret;
 	Entity381* redTank;
 	Entity381* redTurret;
+	int arenaSizeX;
+	int arenaSizeZ;
 };
