@@ -43,7 +43,8 @@ public:
 	float reloadTime;
 	int bulletCount;
 	int bulletLimit;
-	bool destroyFlag;
+	EntityState state;
+	EntityType owner;
 
 	unsigned int entityId;
 

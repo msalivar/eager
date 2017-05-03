@@ -43,12 +43,16 @@ void GameManager::tick(float dt)
 
 void GameManager::createEnts()
 {
-	blueTank = engine->entityManager->CreateEntity(EntityType::BLUETANK, Ogre::Vector3(-100, 0, 0));
-	blueTurret = engine->entityManager->CreateEntity(EntityType::BLUETURRET, Ogre::Vector3(-100, 0, 0));
+	blueTank = engine->entityManager->CreateEntity(EntityType::BLUETANK, Ogre::Vector3(-200, 0, 0));
+	blueTurret = engine->entityManager->CreateEntity(EntityType::BLUETURRET, Ogre::Vector3(-200, 0, 0));
 	blueTank->attachment = blueTurret;
-	redTank = engine->entityManager->CreateEntity(EntityType::REDTANK, Ogre::Vector3(100, 0, 0));
-	redTurret = engine->entityManager->CreateEntity(EntityType::REDTURRET, Ogre::Vector3(100, 0, 0));
+	redTank = engine->entityManager->CreateEntity(EntityType::REDTANK, Ogre::Vector3(200, 0, 0));
+	redTurret = engine->entityManager->CreateEntity(EntityType::REDTURRET, Ogre::Vector3(200, 0, 0));
 	redTank->attachment = redTurret;
+
+	//Ogre::Real radius = blueTank->ogreEntity->getBoundingRadius();
+	//Ogre::AxisAlignedBox box = blueTank->ogreEntity->getBoundingBox();
+	return;
 }
 
 void GameManager::createGround()

@@ -7,7 +7,6 @@
 
 #include "Entity381.h"
 #include "Aspect.h"
-#include "UnitAI.h"
 
 int Entity381::nextId = 0;
 
@@ -21,22 +20,26 @@ Entity381::Entity381(EntityType entType, Ogre::Vector3 pos)
 	this->attachment = nullptr;
 	this->bulletCount = 0;
 	this->bulletLimit = 3;
-	this->destroyFlag = false;
 	this->reloadTime = 4.0f;
+	this->owner = EntityType::NONE;
 
 	if (entityType == EntityType::BULLET)
+	{
+		this->state = EntityState::ALIVE;
 		this->lifeTime = 5.0f;
+	}
 	else
+	{
+		this->state = EntityState::NONE;
 		this->lifeTime = 0;
+	}
 
 	this->aspects.clear();
 	Renderable *r = new Renderable(this);
 	Physics *p = new Physics(this);
-	UnitAI *ai = new UnitAI(this);
 
 	this->aspects.push_front(r);
 	this->aspects.push_front(p);
-	this->aspects.push_front(ai);
 
 	this->entityId = Entity381::nextId++;
 

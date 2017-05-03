@@ -8,7 +8,6 @@
 #include "InputManager.h"
 #include "Engine.h"
 #include "Aspect.h"
-#include "UnitAI.h"
 
 #include <cfloat>
 #include <string>
@@ -185,7 +184,7 @@ bool InputManager::UpdateLocations(float dt)
 			}
 			pOneShootTimer = shootTime;
 			engine->entityManager->CreateProjectile(engine->gameManager->blueTank->pos,
-				engine->gameManager->blueTurret->heading);
+				engine->gameManager->blueTurret->heading, EntityType::BLUETANK);
 		}
 	}
 	if((pOneAimTimer < 0) && keyboard->isKeyDown(OIS::KC_G))
@@ -196,7 +195,7 @@ bool InputManager::UpdateLocations(float dt)
 	if((pOneAimTimer < 0) && keyboard->isKeyDown(OIS::KC_J))
 	{
 		pOneAimTimer = aimTime;
-		engine->gameManager->blueTurret->heading += turnSpeed;		
+		engine->gameManager->blueTurret->heading += turnSpeed;
 	}
 
 	// PLAYER 2
@@ -234,7 +233,7 @@ bool InputManager::UpdateLocations(float dt)
 			}
 			pTwoShootTimer = shootTime;
 			engine->entityManager->CreateProjectile(engine->gameManager->redTank->pos,
-				engine->gameManager->redTurret->heading);
+				engine->gameManager->redTurret->heading, EntityType::REDTANK);
 		}
 	}
 	if((pTwoAimTimer < 0) && keyboard->isKeyDown(OIS::KC_NUMPAD4))

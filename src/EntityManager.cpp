@@ -24,7 +24,24 @@ void EntityManager::tick(float dt)
 	// some serious stuff going on here
     for(const auto& entity : entities)
     {
-		if (entity->destroyFlag)
+		// TODO: remove this temporary fix - need a better solution for leftover bullets
+		if (entity->state == EntityState::DEAD) { continue; }
+		// Check for bullet collision
+		if (entity->state == EntityState::ALIVE && entity->entityType == EntityType::BULLET)
+		{
+			if (entity->owner == EntityType::REDTANK && 
+				CheckForBulletCollision(entity, engine->gameManager->blueTank))
+			{
+				entity->state = EntityState::DESTROY;
+			}
+			else if (entity->owner == EntityType::BLUETANK && 
+				CheckForBulletCollision(entity, engine->gameManager->redTank))
+			{
+				entity->state = EntityState::DESTROY;
+			}
+		}
+		// Check for destroy flag
+		if (entity->state == EntityState::DESTROY)
 		{
 			entity->aspects.clear();
 			engine->graphicsManager->ogreSceneManager->destroyEntity(entity->ogreEntity);
@@ -32,9 +49,9 @@ void EntityManager::tick(float dt)
 			entity->ogreSceneNode = nullptr;
 			if (entity->attachment != nullptr)
 			{
-				entity->attachment->destroyFlag = true;
+				entity->attachment->state = EntityState::DESTROY;
 			}
-			entity->destroyFlag = false;
+			entity->state = EntityState::DEAD;
 			continue;
 		}
         entity->Tick(dt);
@@ -95,11 +112,18 @@ Entity381* EntityManager::CreateEntity(EntityType entityType, Ogre::Vector3 posi
 	return ent;
 }
 
-Entity381* EntityManager::CreateProjectile(Ogre::Vector3 position, float heading)
+Entity381* EntityManager::CreateProjectile(Ogre::Vector3 position, float heading, EntityType owner)
 {
 	Entity381 *ent = 0;
 	ent = new Bullet(position, heading);
 	CreateOgreEntityAndNode(ent, 5);
 	entities.push_front(ent);
+	ent->owner = owner;
 	return ent;
+}
+
+bool EntityManager::CheckForBulletCollision(Entity381* bullet, Entity381* object)
+{
+	Ogre::Real distance = bullet->pos.distance(object->pos);
+	return distance <= object->ogreEntity->getBoundingRadius();
 }
