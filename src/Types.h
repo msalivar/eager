@@ -32,4 +32,5 @@ enum class STATE {
 	GAMEPLAY,
 	WIN_SCREEN
 };
+
 #endif /* TYPES_H_ */

@@ -14,6 +14,7 @@ Engine::Engine()
 	inputManager = nullptr;
 	entityManager = nullptr;
 	gameManager = nullptr;
+	uiManager = nullptr;
 	keepRunning = true;
 
 	currentState = STATE::SPLASH;
