@@ -14,7 +14,6 @@
 #include <SdkTrays.h>
 #include "Manager.h"
 #include "Entity381.h"
-#include "Command.h"
 
 class InputManager : 
 public Manager,

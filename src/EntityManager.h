@@ -30,8 +30,9 @@ public:
     void stop() override;
 
 	Entity381* CreateEntity(EntityType entityType, Ogre::Vector3 pos);
-	Entity381* CreateProjectile(Ogre::Vector3 position, float heading);
+	Entity381* CreateProjectile(Ogre::Vector3 position, float heading, EntityType owner);
 	void CreateOgreEntityAndNode(Entity381 *ent, float scale = 1);
+	bool CheckForBulletCollision(Entity381* bullet, Entity381* object);
 
 	std::list<Entity381 *> entities;
 

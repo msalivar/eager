@@ -7,19 +7,21 @@ enum class EntityType {
 	BLUETURRET,
 	REDTANK,
 	REDTURRET,
-	BULLET
-};
-
-enum class COMMAND_TYPE {
-	MOVETO,
-	FOLLOW,
-	INTERCEPT
+	BULLET,
+	NONE
 };
 
 enum class ASPECT_TYPE {
 	PHYSICS,
 	RENDERABLE,
 	AI,
+	NONE
+};
+
+enum class EntityState {
+	ALIVE,
+	DESTROY,
+	DEAD,
 	NONE
 };
 
