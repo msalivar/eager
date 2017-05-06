@@ -9,7 +9,8 @@ enum class EntityType {
 	REDTURRET,
 	BULLET,
 	NONE,
-	WALL
+	WALL,
+	TOWER
 };
 
 enum class ASPECT_TYPE {

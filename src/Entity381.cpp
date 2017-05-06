@@ -69,12 +69,12 @@ void Entity381::Tick(float dt)
 void Entity381::DefaultInit()
 {
 	this->acceleration = 8.0f;
-	this->deceleration = 15.0f;
-	this->reverseAcceleration = 3.0f;
+	this->deceleration = 14.0f;
+	this->reverseAcceleration = 5.0f;
 	this->turnRate = 0.2f;
 
 	this->maxSpeed = 35.0f;
-	this->minSpeed = -25.0f;
+	this->minSpeed = -30.0f;
 
 	this->desiredHeading = this->heading;
 	this->desiredSpeed = 0;
@@ -145,5 +145,16 @@ Wall::Wall(Ogre::Vector3 pos, float heading) : Entity381(EntityType::WALL, pos)
 }
 
 Wall::~Wall()
+{
+}
+
+Tower::Tower(Ogre::Vector3 pos, float heading) : Entity381(EntityType::WALL, pos)
+{
+	this->meshfile = "tower.mesh";
+	this->heading = heading;
+	this->desiredHeading = heading;
+}
+
+Tower::~Tower()
 {
 }

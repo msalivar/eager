@@ -149,6 +149,15 @@ Entity381* EntityManager::CreateWall(Ogre::Vector3 position, float heading)
     return ent;
 }
 
+Entity381* EntityManager::CreateTower(Ogre::Vector3 position, float heading)
+{
+    Entity381 *ent = 0;
+    ent = new Tower(position, heading);
+    CreateOgreEntityAndNode(ent, 0.025);
+    entities.push_front(ent);
+    return ent;
+}
+
 bool EntityManager::CheckForBulletCollision(Entity381* bullet, Entity381* object)
 {
     Ogre::Real distance = bullet->pos.distance(object->pos);

@@ -8,6 +8,9 @@
 #include "GameManager.h"
 #include "Engine.h"
 #include <OgreMeshManager.h>
+#include <stdio.h>      /* printf, scanf, puts, NULL */
+#include <stdlib.h>     /* srand, rand */
+#include <time.h>       /* time */
 
 GameManager::GameManager(Engine *engine): Manager(engine)
 {
@@ -28,12 +31,18 @@ void GameManager::loadLevel()
 	//We know graphicsMgr is ready and initialized
 	engine->graphicsManager->ogreSceneManager->setAmbientLight(Ogre::ColourValue(0.5, 0.5, 0.5));
 	Ogre::Light* light = engine->graphicsManager->ogreSceneManager->createLight("MainLight");
-	light->setPosition(20.0, 80.0, 50.0);
+	light->setPosition(0.0, 200.0, 0.0);
 
 	createGround();
 	createSky();
 	createEnts();
 	createLevelOne();
+
+	/* initialize random seed: */
+	srand (time(NULL));
+	/* generate secret number between 1 and 10: */
+	int num = rand() % 3 + 1;
+	engine->soundManager->playMusic(num);
 
 	this->loadObjects();
 }
@@ -150,4 +159,7 @@ void GameManager::createLevelOne()
 	ent = engine->entityManager->CreateWall(Ogre::Vector3(arenaSizeX - z, 0, -arenaSizeZ - buffer + 5), 1.5708f); z += increment;
 	ent = engine->entityManager->CreateWall(Ogre::Vector3(arenaSizeX - z, 0, -arenaSizeZ - buffer + 5), 1.5708f); z += increment;
 	ent = engine->entityManager->CreateWall(Ogre::Vector3(arenaSizeX - z, 0, -arenaSizeZ - buffer + 5), 1.5708f);
+	// towers
+	ent = engine->entityManager->CreateTower(Ogre::Vector3(100, 0, -50), 0);
+	ent = engine->entityManager->CreateTower(Ogre::Vector3(-100, 0, 50), 0);
 }

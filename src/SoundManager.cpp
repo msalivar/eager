@@ -2,8 +2,14 @@
 #include "Engine.h"
 
 ALenum SoundMgr::error;
-ALuint SoundMgr::backgroundBuffer;
-ALuint SoundMgr::backgroundSource;
+ALuint SoundMgr::menuBuffer;
+ALuint SoundMgr::menuSource;
+ALuint SoundMgr::musicBuffer1;
+ALuint SoundMgr::musicSource1;
+ALuint SoundMgr::musicBuffer2;
+ALuint SoundMgr::musicSource2;
+ALuint SoundMgr::musicBuffer3;
+ALuint SoundMgr::musicSource3;
 ALuint SoundMgr::idleBuffer;
 ALuint SoundMgr::idleBuffer2;
 ALuint SoundMgr::idleSource;
@@ -34,7 +40,19 @@ void SoundMgr::init()
 
 	//Create Buffers
 	std::cout << "Creating Buffers" << std::endl;
-	backgroundBuffer = alutCreateBufferFromFile("../assets/sounds/background.wav"); 
+	menuBuffer = alutCreateBufferFromFile("../assets/sounds/menuMusic.wav"); 
+	if((error = alutGetError()) != ALUT_ERROR_NO_ERROR)
+		fprintf(stderr, "ALUT Error: %s\n",alutGetErrorString(error));
+
+	musicBuffer1 = alutCreateBufferFromFile("../assets/sounds/battleMusic1.wav"); 
+	if((error = alutGetError()) != ALUT_ERROR_NO_ERROR)
+		fprintf(stderr, "ALUT Error: %s\n",alutGetErrorString(error));
+
+	musicBuffer2 = alutCreateBufferFromFile("../assets/sounds/battleMusic2.wav"); 
+	if((error = alutGetError()) != ALUT_ERROR_NO_ERROR)
+		fprintf(stderr, "ALUT Error: %s\n",alutGetErrorString(error));
+
+	musicBuffer3 = alutCreateBufferFromFile("../assets/sounds/battleMusic3.wav"); 
 	if((error = alutGetError()) != ALUT_ERROR_NO_ERROR)
 		fprintf(stderr, "ALUT Error: %s\n",alutGetErrorString(error));
 
@@ -64,7 +82,19 @@ void SoundMgr::init()
 
 	//Generate Sources
 	std::cout << "Generating sources" << std::endl;
-	alGenSources(1, &backgroundSource);
+	alGenSources(1, &menuSource);
+	if((error = alutGetError()) != ALUT_ERROR_NO_ERROR)
+		fprintf(stderr, "ALUT Error: %s\n",alutGetErrorString(error));
+
+	alGenSources(1, &musicSource1);
+	if((error = alutGetError()) != ALUT_ERROR_NO_ERROR)
+		fprintf(stderr, "ALUT Error: %s\n",alutGetErrorString(error));
+
+	alGenSources(1, &musicSource2);
+	if((error = alutGetError()) != ALUT_ERROR_NO_ERROR)
+		fprintf(stderr, "ALUT Error: %s\n",alutGetErrorString(error));
+
+	alGenSources(1, &musicSource3);
 	if((error = alutGetError()) != ALUT_ERROR_NO_ERROR)
 		fprintf(stderr, "ALUT Error: %s\n",alutGetErrorString(error));
 
@@ -94,7 +124,19 @@ void SoundMgr::init()
 
 	//Link sources to buffers
 	std::cout << "Linking sources to buffers" << std::endl;
-	alSourcei(backgroundSource, AL_BUFFER, backgroundBuffer);
+	alSourcei(menuSource, AL_BUFFER, menuBuffer);
+	if((error = alutGetError()) != ALUT_ERROR_NO_ERROR)
+		fprintf(stderr, "ALUT Error: %s\n",alutGetErrorString(error));
+
+	alSourcei(musicSource1, AL_BUFFER, musicBuffer1);
+	if((error = alutGetError()) != ALUT_ERROR_NO_ERROR)
+		fprintf(stderr, "ALUT Error: %s\n",alutGetErrorString(error));
+
+	alSourcei(musicSource2, AL_BUFFER, musicBuffer2);
+	if((error = alutGetError()) != ALUT_ERROR_NO_ERROR)
+		fprintf(stderr, "ALUT Error: %s\n",alutGetErrorString(error));
+
+	alSourcei(musicSource3, AL_BUFFER, musicBuffer3);
 	if((error = alutGetError()) != ALUT_ERROR_NO_ERROR)
 		fprintf(stderr, "ALUT Error: %s\n",alutGetErrorString(error));
 
@@ -123,11 +165,16 @@ void SoundMgr::init()
 		fprintf(stderr, "ALUT Error: %s\n",alutGetErrorString(error));
 
 	// Set source attributes
-	alSourcef(backgroundSource, AL_LOOPING, AL_TRUE);
+	alSourcef(menuSource, AL_LOOPING, AL_TRUE);
 	alSourcef(idleSource, AL_LOOPING, AL_TRUE);
 	alSourcef(idleSource2, AL_LOOPING, AL_TRUE);
 	alSourcef(moveSource, AL_LOOPING, AL_TRUE);
 	alSourcef(moveSource2, AL_LOOPING, AL_TRUE);
+	// Volume
+	alSourcef(menuSource, AL_GAIN, 1.8f);
+	alSourcef(musicSource1, AL_GAIN, 1.8f);
+	alSourcef(musicSource2, AL_GAIN, 1.8f);
+	alSourcef(musicSource3, AL_GAIN, 1.8f);
 	alSourcef(idleSource, AL_GAIN, 0.7f);
 	alSourcef(idleSource2, AL_GAIN, 0.7f);
 	alSourcef(moveSource, AL_GAIN, 0.6f);
@@ -144,14 +191,54 @@ void SoundMgr::stop()
 
 void SoundMgr::loadLevel()
 {
-	playBackgroundSound();
 }
 
-void SoundMgr::playBackgroundSound()
+void SoundMgr::playMusic(int id)
 {
-	alSourcePlay(backgroundSource);
+	switch (id)
+	{
+		case 0:
+			alSourcePlay(menuSource);
+			break;
+		case 1:
+			alSourcePlay(musicSource1);
+			break;
+		case 2:
+			alSourcePlay(musicSource2);
+			break;
+		case 3:
+			alSourcePlay(musicSource3);
+			break;
+		default:
+			fprintf(stderr, "Bad music ID");
+			break;
+	}
 	if((error = alutGetError()) != ALUT_ERROR_NO_ERROR)
-		fprintf(stderr, "ALUT Error - play background: %s\n",alutGetErrorString(error));
+		fprintf(stderr, "ALUT Error - play music: %s\n",alutGetErrorString(error));
+}
+
+void SoundMgr::stopMusic(int id)
+{
+	switch (id)
+	{
+		case 0:
+			alSourceStop(menuSource);
+			break;
+		case 1:
+			alSourceStop(musicSource1);
+			break;
+		case 2:
+			alSourceStop(musicSource2);
+			break;
+		case 3:
+			alSourceStop(musicSource3);
+			break;
+		default:
+			fprintf(stderr, "Bad music ID");
+			break;
+	}
+	if((error = alutGetError()) != ALUT_ERROR_NO_ERROR)
+		fprintf(stderr, "ALUT Error - stop music: %s\n",alutGetErrorString(error));
 }
 
 void SoundMgr::playIdleSound()
