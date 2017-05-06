@@ -7,6 +7,7 @@
 
 #include "UIManager.h"
 #include "Engine.h"
+#include <string>
 
 UIManager::UIManager(Engine* eng) : Manager(eng) {
 	// Initialize the OverlaySystem (changed for Ogre 1.9)
@@ -126,7 +127,7 @@ void UIManager::loadMenu()
 
 std::string UIManager::stringTime(float time)
 {
-	std::string result = "";
+	std::string result = "";/*
 	int resultTime = (int)time;
 	int seconds = resultTime % 60;
 	int minutes = resultTime / 60;
@@ -139,7 +140,7 @@ std::string UIManager::stringTime(float time)
 	{
 		result += "0";
 	}
-	result += std::to_string(seconds);
-
+	result += std::string(seconds);
+	*/
 	return result;
 }

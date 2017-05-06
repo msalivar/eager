@@ -8,6 +8,8 @@
 #include "Engine.h"
 #include <OgreTimer.h>
 
+class SoundMgr;
+
 Engine::Engine()
 {
 	graphicsManager = nullptr;
@@ -15,6 +17,7 @@ Engine::Engine()
 	entityManager = nullptr;
 	gameManager = nullptr;
 	uiManager = nullptr;
+	soundManager = nullptr;
 	keepRunning = true;
 
 	currentState = STATE::SPLASH;
@@ -38,6 +41,7 @@ void Engine::initialize()
     entityManager = new EntityManager(this);
     gameManager = new GameManager(this);
 	uiManager = new UIManager(this);
+	soundManager = new SoundMgr(this);
 
     // initialize
     graphicsManager->init();
@@ -45,6 +49,7 @@ void Engine::initialize()
     entityManager->init();
     gameManager->init();
 	uiManager->init();
+	soundManager->init();
 }
 
 void Engine::tick_all(float dt) const
@@ -53,8 +58,9 @@ void Engine::tick_all(float dt) const
     graphicsManager->tick(dt); if (!keepRunning) return;
 	inputManager->tick(dt); if (!keepRunning) return;
 	entityManager->tick(dt); if (!keepRunning) return;
-	gameManager->tick(dt); 
-	uiManager->tick(dt);
+	gameManager->tick(dt); if (!keepRunning) return;
+	uiManager->tick(dt); if (!keepRunning) return;
+	soundManager->tick(dt);
 }
 
 void Engine::shutdown() const
@@ -64,22 +70,23 @@ void Engine::shutdown() const
 	entityManager->stop();
 	gameManager->stop();
 	uiManager->stop();
+	soundManager->stop();
 }
 
 void Engine::run() const
 {
-	auto timer = std::unique_ptr<Ogre::Timer>(new Ogre::Timer());
-	float oldTime = timer->getMilliseconds()/1000.0f;
-	float newTime;
-	float dt = 0.001f;
-	while(keepRunning)
+    Ogre::Timer* timer = new Ogre::Timer();
+    float oldTime = timer->getMilliseconds() / 1000.0f;
+    float newTime;
+    float dt = 0.001f;
+    while (keepRunning)
     {
-		newTime = timer->getMilliseconds()/1000.0f;
-		dt = newTime - oldTime;
-		oldTime = newTime;
-		tick_all(dt);
-	}
-	shutdown();
+        newTime = timer->getMilliseconds() / 1000.0f;
+        dt = newTime - oldTime;
+        oldTime = newTime;
+        tick_all(dt);
+    }
+shutdown();
 }
 
 void Engine::loadLevel()
@@ -90,4 +97,5 @@ void Engine::loadLevel()
 	entityManager->loadLevel();
 	gameManager->loadLevel();
 	uiManager->loadLevel();
+	soundManager->loadLevel();
 }

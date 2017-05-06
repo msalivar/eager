@@ -90,7 +90,7 @@ include_directories(${OGRE_INCLUDE_DIRS}
                     ${OIS_INCLUDE_DIRS}
                     ${OGRE_SAMPLES_INCLUDEPATH}
                     ${OGRE_Overlay_INCLUDE_DIRS}
-		    /usr/include/AL
+		                /usr/include/AL
                     /usr/include/audio)
 
 # Add MSVC Boost include and library path
@@ -148,7 +148,8 @@ target_link_libraries( ${PROJECT_NAME} ${OGRE_LIBRARIES}
                                        ${OGRE_HLMS_LIBRARIES}
                                        ${OGRE_Bites_LIBRARIES}
                                        openal
-                                       audio)
+                                       audio
+                                       alut)
 
 # Statically link Bullet libraries
 if(INCLUDE_BULLET)
