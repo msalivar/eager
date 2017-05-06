@@ -43,6 +43,7 @@ public:
 	float reloadTime;
 	int bulletCount;
 	int bulletLimit;
+	bool moving;
 	EntityState state;
 	EntityType owner;
 

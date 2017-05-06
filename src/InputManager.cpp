@@ -166,16 +166,26 @@ bool InputManager::UpdateLocations(float dt)
 		if (engine->gameManager->blueTank->desiredSpeed < engine->gameManager->blueTank->maxSpeed)
 			engine->gameManager->blueTank->desiredSpeed += moveSpeed;
 	}
-	if ((pOneTurnTimer < 0) && keyboard->isKeyDown(OIS::KC_A))
-	{
-		pOneTurnTimer = turnTime;
-		engine->gameManager->blueTank->heading -= turnSpeed;	
-	}
-	if ((pOneMoveTimer < 0) && keyboard->isKeyDown(OIS::KC_S))
+	else if ((pOneMoveTimer < 0) && keyboard->isKeyDown(OIS::KC_S))
 	{
 		pOneMoveTimer = moveTime;
 		if (engine->gameManager->blueTank->desiredSpeed > engine->gameManager->blueTank->minSpeed)
 			engine->gameManager->blueTank->desiredSpeed -= slowSpeed;
+	}
+	else if (pOneMoveTimer < 0)
+	{		
+		if (engine->gameManager->blueTank->desiredSpeed < 0)
+			engine->gameManager->blueTank->desiredSpeed += moveSpeed;		
+		else if (engine->gameManager->blueTank->desiredSpeed > 0)
+			engine->gameManager->blueTank->desiredSpeed -= slowSpeed;
+		if (engine->gameManager->blueTank->desiredSpeed <= 2 && engine->gameManager->blueTank->desiredSpeed >= -2)
+			engine->gameManager->blueTank->desiredSpeed = 0;
+	}
+
+	if ((pOneTurnTimer < 0) && keyboard->isKeyDown(OIS::KC_A))
+	{
+		pOneTurnTimer = turnTime;
+		engine->gameManager->blueTank->heading -= turnSpeed;	
 	}
 	if ((pOneTurnTimer < 0) && keyboard->isKeyDown(OIS::KC_D))
 	{
@@ -195,6 +205,7 @@ bool InputManager::UpdateLocations(float dt)
 			pOneShootTimer = shootTime;
 			engine->entityManager->CreateProjectile(engine->gameManager->blueTank->pos,
 				engine->gameManager->blueTurret->heading, EntityType::BLUETANK);
+			engine->soundManager->playShootSound();
 		}
 	}
 	if ((pOneAimTimer < 0) && keyboard->isKeyDown(OIS::KC_G))
@@ -215,16 +226,26 @@ bool InputManager::UpdateLocations(float dt)
 		if (engine->gameManager->redTank->desiredSpeed < engine->gameManager->redTank->maxSpeed)
 			engine->gameManager->redTank->desiredSpeed += moveSpeed;		
 	}
-	if ((pTwoTurnTimer < 0) && keyboard->isKeyDown(OIS::KC_LEFT))
-	{
-		pTwoTurnTimer = turnTime;
-		engine->gameManager->redTank->heading -= turnSpeed;			
-	}
-	if ((pTwoMoveTimer < 0) && keyboard->isKeyDown(OIS::KC_DOWN))
+	else if ((pTwoMoveTimer < 0) && keyboard->isKeyDown(OIS::KC_DOWN))
 	{
 		pTwoMoveTimer = moveTime;
 		if (engine->gameManager->redTank->desiredSpeed > engine->gameManager->redTank->minSpeed)
 			engine->gameManager->redTank->desiredSpeed -= slowSpeed;
+	}
+	else if (pTwoMoveTimer < 0)
+	{		
+		if (engine->gameManager->redTank->desiredSpeed < 0)
+			engine->gameManager->redTank->desiredSpeed += moveSpeed;		
+		else if (engine->gameManager->redTank->desiredSpeed > 0)
+			engine->gameManager->redTank->desiredSpeed -= slowSpeed;
+		if (engine->gameManager->redTank->desiredSpeed <= 2 && engine->gameManager->redTank->desiredSpeed >= -2)
+			engine->gameManager->redTank->desiredSpeed = 0;
+	}
+
+	if ((pTwoTurnTimer < 0) && keyboard->isKeyDown(OIS::KC_LEFT))
+	{
+		pTwoTurnTimer = turnTime;
+		engine->gameManager->redTank->heading -= turnSpeed;			
 	}
 	if ((pTwoTurnTimer < 0) && keyboard->isKeyDown(OIS::KC_RIGHT))
 	{
@@ -244,6 +265,7 @@ bool InputManager::UpdateLocations(float dt)
 			pTwoShootTimer = shootTime;
 			engine->entityManager->CreateProjectile(engine->gameManager->redTank->pos,
 				engine->gameManager->redTurret->heading, EntityType::REDTANK);
+			engine->soundManager->playShootSoundPTwo();
 		}
 	}
 	if ((pTwoAimTimer < 0) && keyboard->isKeyDown(OIS::KC_NUMPAD4))

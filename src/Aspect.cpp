@@ -60,6 +60,9 @@ void Physics::Tick(float dt)
 	else if (entity->speed > entity->desiredSpeed && entity->speed <= 0)
 		entity->speed -= entity->reverseAcceleration * dt;
 
+	if (entity->desiredSpeed == 0 && entity->speed < 0.5f && entity->speed > -0.5f)
+		entity->speed = 0;
+
 	entity->vel = Ogre::Vector3(cos(entity->heading) * entity->speed, 0, sin(entity->heading) * entity->speed);
 	entity->pos += entity->vel * dt;
 	if (entity->attachment != nullptr)

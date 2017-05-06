@@ -5,11 +5,17 @@ ALenum SoundMgr::error;
 ALuint SoundMgr::backgroundBuffer;
 ALuint SoundMgr::backgroundSource;
 ALuint SoundMgr::idleBuffer;
+ALuint SoundMgr::idleBuffer2;
 ALuint SoundMgr::idleSource;
+ALuint SoundMgr::idleSource2;
 ALuint SoundMgr::moveBuffer;
+ALuint SoundMgr::moveBuffer2;
 ALuint SoundMgr::moveSource;
+ALuint SoundMgr::moveSource2;
 ALuint SoundMgr::shootBuffer;
+ALuint SoundMgr::shootBuffer2;
 ALuint SoundMgr::shootSource;
+ALuint SoundMgr::shootSource2;
 
 SoundMgr::SoundMgr(Engine *eng): Manager(eng)
 {
@@ -18,7 +24,6 @@ SoundMgr::SoundMgr(Engine *eng): Manager(eng)
 
 SoundMgr::~SoundMgr()
 {
-	SoundMgr::closeAudio();
 }
 
 void SoundMgr::init()
@@ -29,26 +34,99 @@ void SoundMgr::init()
 
 	//Create Buffers
 	std::cout << "Creating Buffers" << std::endl;
-	SoundMgr::backgroundBuffer = alutCreateBufferFromFile("../assets/sounds/background.wav"); 
-	if((SoundMgr::error = alutGetError()) != ALUT_ERROR_NO_ERROR)
+	backgroundBuffer = alutCreateBufferFromFile("../assets/sounds/background.wav"); 
+	if((error = alutGetError()) != ALUT_ERROR_NO_ERROR)
+		fprintf(stderr, "ALUT Error: %s\n",alutGetErrorString(error));
+
+	idleBuffer = alutCreateBufferFromFile("../assets/sounds/tankIdle.wav"); 
+	if((error = alutGetError()) != ALUT_ERROR_NO_ERROR)
+		fprintf(stderr, "ALUT Error: %s\n",alutGetErrorString(error));
+
+	idleBuffer2 = alutCreateBufferFromFile("../assets/sounds/tankIdle.wav"); 
+	if((error = alutGetError()) != ALUT_ERROR_NO_ERROR)
+		fprintf(stderr, "ALUT Error: %s\n",alutGetErrorString(error));
+
+	moveBuffer = alutCreateBufferFromFile("../assets/sounds/tankMoving.wav"); 
+	if((error = alutGetError()) != ALUT_ERROR_NO_ERROR)
+		fprintf(stderr, "ALUT Error: %s\n",alutGetErrorString(error));
+
+	moveBuffer2 = alutCreateBufferFromFile("../assets/sounds/tankMoving.wav"); 
+	if((error = alutGetError()) != ALUT_ERROR_NO_ERROR)
+		fprintf(stderr, "ALUT Error: %s\n",alutGetErrorString(error));
+
+	shootBuffer = alutCreateBufferFromFile("../assets/sounds/tankShoot.wav"); 
+	if((error = alutGetError()) != ALUT_ERROR_NO_ERROR)
+		fprintf(stderr, "ALUT Error: %s\n",alutGetErrorString(error));
+
+	shootBuffer2 = alutCreateBufferFromFile("../assets/sounds/tankShoot.wav"); 
+	if((error = alutGetError()) != ALUT_ERROR_NO_ERROR)
 		fprintf(stderr, "ALUT Error: %s\n",alutGetErrorString(error));
 
 	//Generate Sources
 	std::cout << "Generating sources" << std::endl;
-	alGenSources(1, &SoundMgr::backgroundSource);
-	if((SoundMgr::error = alutGetError()) != ALUT_ERROR_NO_ERROR)
+	alGenSources(1, &backgroundSource);
+	if((error = alutGetError()) != ALUT_ERROR_NO_ERROR)
+		fprintf(stderr, "ALUT Error: %s\n",alutGetErrorString(error));
+
+	alGenSources(1, &idleSource);
+	if((error = alutGetError()) != ALUT_ERROR_NO_ERROR)
+		fprintf(stderr, "ALUT Error: %s\n",alutGetErrorString(error));
+
+	alGenSources(1, &idleSource2);
+	if((error = alutGetError()) != ALUT_ERROR_NO_ERROR)
+		fprintf(stderr, "ALUT Error: %s\n",alutGetErrorString(error));
+
+	alGenSources(1, &moveSource);
+	if((error = alutGetError()) != ALUT_ERROR_NO_ERROR)
+		fprintf(stderr, "ALUT Error: %s\n",alutGetErrorString(error));
+
+	alGenSources(1, &moveSource2);
+	if((error = alutGetError()) != ALUT_ERROR_NO_ERROR)
+		fprintf(stderr, "ALUT Error: %s\n",alutGetErrorString(error));
+
+	alGenSources(1, &shootSource);
+	if((error = alutGetError()) != ALUT_ERROR_NO_ERROR)
+		fprintf(stderr, "ALUT Error: %s\n",alutGetErrorString(error));
+
+	alGenSources(1, &shootSource2);
+	if((error = alutGetError()) != ALUT_ERROR_NO_ERROR)
 		fprintf(stderr, "ALUT Error: %s\n",alutGetErrorString(error));
 
 	//Link sources to buffers
 	std::cout << "Linking sources to buffers" << std::endl;
-	alSourcei(SoundMgr::backgroundSource, AL_BUFFER, SoundMgr::backgroundBuffer);
-	if((SoundMgr::error = alutGetError()) != ALUT_ERROR_NO_ERROR)
+	alSourcei(backgroundSource, AL_BUFFER, backgroundBuffer);
+	if((error = alutGetError()) != ALUT_ERROR_NO_ERROR)
+		fprintf(stderr, "ALUT Error: %s\n",alutGetErrorString(error));
+
+	alSourcei(idleSource, AL_BUFFER, idleBuffer);
+	if((error = alutGetError()) != ALUT_ERROR_NO_ERROR)
+		fprintf(stderr, "ALUT Error: %s\n",alutGetErrorString(error));
+
+	alSourcei(idleSource2, AL_BUFFER, idleBuffer2);
+	if((error = alutGetError()) != ALUT_ERROR_NO_ERROR)
+		fprintf(stderr, "ALUT Error: %s\n",alutGetErrorString(error));
+
+	alSourcei(moveSource, AL_BUFFER, moveBuffer);
+	if((error = alutGetError()) != ALUT_ERROR_NO_ERROR)
+		fprintf(stderr, "ALUT Error: %s\n",alutGetErrorString(error));
+
+	alSourcei(moveSource2, AL_BUFFER, moveBuffer2);
+	if((error = alutGetError()) != ALUT_ERROR_NO_ERROR)
+		fprintf(stderr, "ALUT Error: %s\n",alutGetErrorString(error));
+
+	alSourcei(shootSource, AL_BUFFER, shootBuffer);
+	if((error = alutGetError()) != ALUT_ERROR_NO_ERROR)
+		fprintf(stderr, "ALUT Error: %s\n",alutGetErrorString(error));
+
+	alSourcei(shootSource2, AL_BUFFER, shootBuffer2);
+	if((error = alutGetError()) != ALUT_ERROR_NO_ERROR)
 		fprintf(stderr, "ALUT Error: %s\n",alutGetErrorString(error));
 }
 
 void SoundMgr::stop()
 {
-
+	alutSleep(1);
+	alutExit();
 }
 
 void SoundMgr::loadLevel()
@@ -58,29 +136,77 @@ void SoundMgr::loadLevel()
 
 void SoundMgr::playBackgroundSound()
 {
-	std::cout << "Playing background sound" << std::endl;
-	alSourcePlay(SoundMgr::backgroundSource);
-	if((SoundMgr::error = alutGetError()) != ALUT_ERROR_NO_ERROR)
-		fprintf(stderr, "ALUT Error - play laser: %s\n",alutGetErrorString(error));
+	alSourcePlay(backgroundSource);
+	if((error = alutGetError()) != ALUT_ERROR_NO_ERROR)
+		fprintf(stderr, "ALUT Error - play background: %s\n",alutGetErrorString(error));
 }
 
 void SoundMgr::playIdleSound()
 {
+	alSourcePlay(idleSource);
+	if((error = alutGetError()) != ALUT_ERROR_NO_ERROR)
+		fprintf(stderr, "ALUT Error - play idle: %s\n",alutGetErrorString(error));
+}
 
+void SoundMgr::playIdleSoundPTwo()
+{
+	alSourcePlay(idleSource2);
+	if((error = alutGetError()) != ALUT_ERROR_NO_ERROR)
+		fprintf(stderr, "ALUT Error - play idle: %s\n",alutGetErrorString(error));
+}
+
+void SoundMgr::stopIdleSound()
+{
+	alSourceStop(idleSource);
+	if((error = alutGetError()) != ALUT_ERROR_NO_ERROR)
+		fprintf(stderr, "ALUT Error - stop idle: %s\n",alutGetErrorString(error));
+}
+
+void SoundMgr::stopIdleSoundPTwo()
+{
+	alSourceStop(idleSource2);
+	if((error = alutGetError()) != ALUT_ERROR_NO_ERROR)
+		fprintf(stderr, "ALUT Error - stop idle: %s\n",alutGetErrorString(error));
 }
 
 void SoundMgr::playMoveSound()
 {
+	alSourcePlay(moveSource);
+	if((error = alutGetError()) != ALUT_ERROR_NO_ERROR)
+		fprintf(stderr, "ALUT Error - play move: %s\n",alutGetErrorString(error));
+}
 
+void SoundMgr::playMoveSoundPTwo()
+{
+	alSourcePlay(moveSource2);
+	if((error = alutGetError()) != ALUT_ERROR_NO_ERROR)
+		fprintf(stderr, "ALUT Error - play move: %s\n",alutGetErrorString(error));
+}
+
+void SoundMgr::stopMoveSound()
+{
+	alSourceStop(moveSource);
+	if((error = alutGetError()) != ALUT_ERROR_NO_ERROR)
+		fprintf(stderr, "ALUT Error - stop move: %s\n",alutGetErrorString(error));
+}
+
+void SoundMgr::stopMoveSoundPTwo()
+{
+	alSourceStop(moveSource2);
+	if((error = alutGetError()) != ALUT_ERROR_NO_ERROR)
+		fprintf(stderr, "ALUT Error - stop move: %s\n",alutGetErrorString(error));
 }
 
 void SoundMgr::playShootSound()
 {
-
+	alSourcePlay(shootSource);
+	if((error = alutGetError()) != ALUT_ERROR_NO_ERROR)
+		fprintf(stderr, "ALUT Error - play shoot: %s\n",alutGetErrorString(error));
 }
 
-void SoundMgr::closeAudio()
+void SoundMgr::playShootSoundPTwo()
 {
-	alutSleep(1);
-	alutExit();
+	alSourcePlay(shootSource2);
+	if((error = alutGetError()) != ALUT_ERROR_NO_ERROR)
+		fprintf(stderr, "ALUT Error - play shoot: %s\n",alutGetErrorString(error));
 }

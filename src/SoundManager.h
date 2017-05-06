@@ -21,9 +21,6 @@ class Entity;
 
 class SoundMgr : public Manager
 {
-
-private:
-
 public:
 	SoundMgr(Engine* eng);
 	~SoundMgr();
@@ -35,15 +32,27 @@ public:
 
 	static ALuint 	backgroundBuffer,   backgroundSource,
               		idleBuffer,    	 	idleSource,
+              		idleBuffer2,		idleSource2,
               		moveBuffer,     	moveSource,
-              		shootBuffer,    	shootSource;
+              		moveBuffer2,		moveSource2,
+              		shootBuffer,    	shootSource,
+              		shootBuffer2,		shootSource2;
 
 	static ALenum error;
 
 	void playBackgroundSound();
+
 	void playIdleSound();
+	void stopIdleSound();
+	void playIdleSoundPTwo();
+	void stopIdleSoundPTwo();
+
 	void playMoveSound();
+	void stopMoveSound();
+	void playMoveSoundPTwo();
+	void stopMoveSoundPTwo();
+
 	void playShootSound();
-	void closeAudio();
+	void playShootSoundPTwo();
 
 };

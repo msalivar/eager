@@ -22,6 +22,7 @@ Entity381::Entity381(EntityType entType, Ogre::Vector3 pos)
 	this->bulletLimit = 3;
 	this->reloadTime = 4.0f;
 	this->owner = EntityType::NONE;
+	this->moving = false;
 
 	if (entityType == EntityType::BULLET)
 	{
