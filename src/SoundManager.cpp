@@ -121,6 +121,19 @@ void SoundMgr::init()
 	alSourcei(shootSource2, AL_BUFFER, shootBuffer2);
 	if((error = alutGetError()) != ALUT_ERROR_NO_ERROR)
 		fprintf(stderr, "ALUT Error: %s\n",alutGetErrorString(error));
+
+	// Set source attributes
+	alSourcef(backgroundSource, AL_LOOPING, AL_TRUE);
+	alSourcef(idleSource, AL_LOOPING, AL_TRUE);
+	alSourcef(idleSource2, AL_LOOPING, AL_TRUE);
+	alSourcef(moveSource, AL_LOOPING, AL_TRUE);
+	alSourcef(moveSource2, AL_LOOPING, AL_TRUE);
+	alSourcef(idleSource, AL_GAIN, 0.7f);
+	alSourcef(idleSource2, AL_GAIN, 0.7f);
+	alSourcef(moveSource, AL_GAIN, 0.6f);
+	alSourcef(moveSource2, AL_GAIN, 0.6f);
+	alSourcef(shootSource, AL_GAIN, 0.9f);
+	alSourcef(shootSource2, AL_GAIN, 0.9f);
 }
 
 void SoundMgr::stop()
