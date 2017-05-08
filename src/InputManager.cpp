@@ -144,6 +144,8 @@ void InputManager::windowClosed(Ogre::RenderWindow* rw)
 
 bool InputManager::UpdateLocations(float dt)
 {
+	if (engine->currentState != STATE::GAMEPLAY) { return true; }
+
 	float moveSpeed = 1;
 	float slowSpeed = 2;
 	float turnSpeed = 0.02f;

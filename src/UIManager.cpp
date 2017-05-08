@@ -17,8 +17,6 @@ UIManager::UIManager(Engine* eng) : Manager(eng) {
 	timeMonitor = 0;
 	creditsButton = 0;
 	credits = 0;
-	playerOneWin = false;
-	playerTwoWin = false;
 
 	//Ogre::WindowEventUtilities::addWindowEventListener(engine->gfxMgr->ogreRenderWindow, this);
 }
@@ -51,21 +49,23 @@ void UIManager::loadLevel() {
 	//timeMonitor = mTrayMgr->createLabel(OgreBites::TL_TOPLEFT, "Timer", stringTime(engine->gameManager->gameplayTime));
 }
 
-void UIManager::loadWinScreen(bool win)
+void UIManager::loadWinScreen(int id)
 {
-	playerOneWin = win;
-	playerTwoWin = win;
 
 	int width = engine->graphicsManager->ogreRenderWindow->getWidth();
 	int height = engine->graphicsManager->ogreRenderWindow->getHeight();
 
-	if (playerOneWin == win)
+	if (id == 1)
 	{
 		engine->graphicsManager->loadWinScreenPlayerOne();
 	}
-	else if (playerTwoWin == win)
+	else if (id == 2)
 	{
 		engine->graphicsManager->loadWinScreenPlayerTwo();
+	}
+	else
+	{
+		return;
 	}
 
 	mTrayMgr->showCursor();
@@ -76,8 +76,8 @@ void UIManager::loadWinScreen(bool win)
 	credits->getOverlayElement()->setPosition(width - 300, height - 50 - 600);
 	credits->setText(getCredits());
 
-	credits->hide();
-	credits->setText(getCredits());
+	//credits->hide();
+	//credits->setText(getCredits());
 
 	// Restart Button
 	restartButton = mTrayMgr->createButton(OgreBites::TL_CENTER, "RestartButton", "Restart", 240);
@@ -115,7 +115,7 @@ void UIManager::tick(float dt) {
 
 	else if (engine->currentState == STATE::WIN_SCREEN)
 	{
-		loadWinScreen();
+		//loadWinScreen();
 	}
 
 	/*else if (engine->currentState == STATE::GAMEPLAY)
@@ -189,6 +189,9 @@ void UIManager::buttonHit(OgreBites::Button *b) {
 	else if (b->getName() == "RestartButton")
 	{
 		engine->gameManager->restart();
+		mTrayMgr->destroyWidget(b);
+		mTrayMgr->destroyWidget(creditsButton);
+		mTrayMgr->destroyWidget(credits);		
 	}
 }
 

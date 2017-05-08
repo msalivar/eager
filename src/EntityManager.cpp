@@ -21,6 +21,7 @@ EntityManager::~EntityManager()
 
 void EntityManager::tick(float dt)
 {
+	if (engine->currentState != STATE::GAMEPLAY) { return; }
     // some serious stuff going on here
     for (const auto& entity : entities)
     {
@@ -28,7 +29,7 @@ void EntityManager::tick(float dt)
         if (entity->entityType == EntityType::BULLET)
         {
             HandleBulletState(entity);
-            }
+        }
 
         // TODO: remove this temporary fix - need a better solution for leftover bullets
         if (entity->state == EntityState::DEAD) { continue; }
@@ -178,16 +179,26 @@ void EntityManager::HandleBulletState(Entity381* entity)
         {
             entity->state = EntityState::DESTROY;
             engine->soundManager->playDestroySound();
-            engine->gameManager->pOneScore++;
-            // Check for win here
-        }
+            engine->gameManager->pTwoScore++;
+			// Check for win here
+			if (engine->gameManager->pTwoScore >= 3)
+			{
+				engine->currentState = STATE::WIN_SCREEN;
+				engine->uiManager->loadWinScreen(2);
+		    }
+		}
         else if (entity->owner == EntityType::BLUETANK &&
             CheckForCollision(entity, engine->gameManager->redTank))
         {
             entity->state = EntityState::DESTROY;
             engine->soundManager->playDestroySound();
-            engine->gameManager->pTwoScore++;
+            engine->gameManager->pOneScore++;
             // Check for win here
+			if (engine->gameManager->pOneScore >= 3)
+			{
+				engine->currentState = STATE::WIN_SCREEN;
+				engine->uiManager->loadWinScreen(1);
+		    }
         }        
         // check level entities for collision
         for (const auto& object : engine->gameManager->levelEntities)

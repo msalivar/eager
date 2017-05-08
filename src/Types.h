@@ -34,4 +34,6 @@ enum class STATE {
 	WIN_SCREEN
 };
 
+
+
 #endif /* TYPES_H_ */

@@ -51,7 +51,7 @@ public:
 	virtual void init();
 	virtual void tick(float dt);
 	virtual void loadLevel();
-	virtual void loadWinScreen(bool win = false);
+	virtual void loadWinScreen(int id);
 	virtual void stop();
 
 	OgreBites::InputContext mInputContext;

@@ -120,7 +120,39 @@ void GameManager::loadObjects()
 
 void GameManager::restart()
 {
-	engine->loadLevel();
+    pOneScore = 0;
+    pTwoScore = 0;
+
+	blueTank->pos = Ogre::Vector3(200, 0, 100);
+	blueTurret->pos = Ogre::Vector3(200, 0, 100);
+    blueTank->speed = 0; blueTank->desiredSpeed = 0;
+    blueTank->heading = 3.14159f;	
+    blueTurret->heading = 3.14159f;
+
+	redTank->pos = Ogre::Vector3(-200, 0, -100);
+	redTurret->pos = Ogre::Vector3(-200, 0, -100);
+    redTank->speed = 0; redTank->desiredSpeed = 0;
+    redTank->heading = 0;
+	redTurret->heading = 0;
+    
+    // some serious stuff going on here
+    for (const auto& entity : engine->entityManager->entities)
+    {
+        if (entity->entityType == EntityType::BULLET
+            && entity->state != EntityState::DEAD)
+        {
+            entity->aspects.clear();
+            engine->graphicsManager->ogreSceneManager->destroyEntity(entity->ogreEntity);
+            entity->ogreEntity = nullptr;
+            entity->ogreSceneNode = nullptr;
+            if (entity->attachment != nullptr)
+            {
+                entity->attachment->state = EntityState::DESTROY;
+            }
+            entity->state = EntityState::DEAD;
+        }
+    }
+	engine->currentState = STATE::GAMEPLAY;
 }
 
 void GameManager::createLevelOne()
