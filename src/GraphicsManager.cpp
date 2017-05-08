@@ -162,3 +162,37 @@ void GraphicsManager::loadMenu()
 
 	rect->setMaterial("MenuScreen");
 }
+
+void GraphicsManager::loadSplashScreen()
+{
+	// Create background material
+	Ogre::MaterialPtr material = Ogre::MaterialManager::getSingleton().create("TestScreen", "General");
+	material->getTechnique(0)->getPass(0)->createTextureUnitState("test.png");
+	material->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
+	material->getTechnique(0)->getPass(0)->setDepthWriteEnabled(false);
+	material->getTechnique(0)->getPass(0)->setLightingEnabled(false);
+
+	rect->setMaterial("TestScreen");
+}
+
+void GraphicsManager::loadWinScreenPlayerOne()
+{
+	Ogre::MaterialPtr material = Ogre::MaterialManager::getSingleton().create("WinScreen1", "General");
+	material->getTechnique(0)->getPass(0)->createTextureUnitState("blueTankVictory.png");
+	material->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
+	material->getTechnique(0)->getPass(0)->setDepthWriteEnabled(false);
+	material->getTechnique(0)->getPass(0)->setLightingEnabled(false);
+
+	rect->setMaterial("WinScreen1");
+}
+
+void GraphicsManager::loadWinScreenPlayerTwo()
+{
+	Ogre::MaterialPtr material = Ogre::MaterialManager::getSingleton().create("WinScreen2", "General");
+	material->getTechnique(0)->getPass(0)->createTextureUnitState("redTankVictory.png");
+	material->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
+	material->getTechnique(0)->getPass(0)->setDepthWriteEnabled(false);
+	material->getTechnique(0)->getPass(0)->setLightingEnabled(false);
+
+	rect->setMaterial("WinScreen2");
+}

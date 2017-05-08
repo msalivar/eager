@@ -118,6 +118,11 @@ void GameManager::loadObjects()
 	engine->graphicsManager->splashNode->pitch(Ogre::Degree(90));
 }
 
+void GameManager::restart()
+{
+	engine->loadLevel();
+}
+
 void GameManager::createLevelOne()
 {
 	levelEntities.clear();

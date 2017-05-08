@@ -34,6 +34,7 @@ public:
 	float gameplayTime; 
 
 	void loadObjects(); 
+	void restart();
 
 	Ogre::Plane ocean;
 	Entity381* blueTank;

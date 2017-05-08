@@ -15,6 +15,10 @@ UIManager::UIManager(Engine* eng) : Manager(eng) {
 	engine->graphicsManager->ogreSceneManager->addRenderQueueListener(mOverlaySystem);
 	mTrayMgr = 0;
 	timeMonitor = 0;
+	creditsButton = 0;
+	credits = 0;
+	playerOneWin = false;
+	playerTwoWin = false;
 
 	//Ogre::WindowEventUtilities::addWindowEventListener(engine->gfxMgr->ogreRenderWindow, this);
 }
@@ -38,10 +42,50 @@ void UIManager::stop() {
 
 void UIManager::loadLevel() {
 	mTrayMgr->hideCursor();
-	mTrayMgr->createButton(OgreBites::TL_TOPLEFT, "MyButton", "Click Me!");
-	mTrayMgr->createLongSelectMenu(OgreBites::TL_TOPRIGHT, "MyMenu", "Menu", 100, 20, 10);
+	//mTrayMgr->createButton(OgreBites::TL_TOPLEFT, "MyButton", "Click Me!");
+	//mTrayMgr->createLongSelectMenu(OgreBites::TL_TOPRIGHT, "MyMenu", "Menu", 100, 20, 10);
+
+	P1ScoreBox = mTrayMgr->createLabel(OgreBites::TL_TOPLEFT, "P1ScoreBox", "Player 1 Score: ", 240);
+	P2ScoreBox = mTrayMgr->createLabel(OgreBites::TL_TOPRIGHT, "P2ScoreBox", "Player 2 Score: ", 240);
 
 	//timeMonitor = mTrayMgr->createLabel(OgreBites::TL_TOPLEFT, "Timer", stringTime(engine->gameManager->gameplayTime));
+}
+
+void UIManager::loadWinScreen(bool win)
+{
+	playerOneWin = win;
+	playerTwoWin = win;
+
+	int width = engine->graphicsManager->ogreRenderWindow->getWidth();
+	int height = engine->graphicsManager->ogreRenderWindow->getHeight();
+
+	if (playerOneWin == win)
+	{
+		engine->graphicsManager->loadWinScreenPlayerOne();
+	}
+	else if (playerTwoWin == win)
+	{
+		engine->graphicsManager->loadWinScreenPlayerTwo();
+	}
+
+	mTrayMgr->showCursor();
+
+	// Credits Screen Button Select
+	creditsButton = mTrayMgr->createButton(OgreBites::TL_BOTTOMRIGHT, "CreditsButton", "Credits");
+	credits = mTrayMgr->createTextBox(OgreBites::TL_NONE, "Credits", "Credits:", 300, 600);
+	credits->getOverlayElement()->setPosition(width - 300, height - 50 - 600);
+	credits->setText(getCredits());
+
+	credits->hide();
+	credits->setText(getCredits());
+
+	// Restart Button
+	restartButton = mTrayMgr->createButton(OgreBites::TL_CENTER, "RestartButton", "Restart", 240);
+}
+
+std::string UIManager::getCredits()
+{
+	return "Clash of Tanks\n\nPresented by Team 7\n\nBrittany Sievert\n\nMatt Salivar\n";
 }
 
 void UIManager::tick(float dt) {
@@ -49,6 +93,7 @@ void UIManager::tick(float dt) {
 	//Update the time since last event if in splash screen
 	if (engine->currentState == STATE::SPLASH)
 	{
+		engine->graphicsManager->loadSplashScreen();
 		engine->timePassed += dt;
 		//If 3 seconds have passed, go into gameplay
 		if (engine->timePassed >= 3)
@@ -59,6 +104,20 @@ void UIManager::tick(float dt) {
 			loadMenu();//Creates the button
 		}
 	}
+
+	else if (engine->currentState == STATE::GAMEPLAY)
+	{
+		int currentPlayerOneScore = engine->gameManager->pOneScore;
+		int currentPlayerTwoScore = engine->gameManager->pTwoScore;
+		P1ScoreBox->setCaption("Player 1 Score: " + std::to_string(currentPlayerOneScore));
+		P2ScoreBox->setCaption("Player 2 Score: " + std::to_string(currentPlayerTwoScore));
+	}
+
+	else if (engine->currentState == STATE::WIN_SCREEN)
+	{
+		loadWinScreen();
+	}
+
 	/*else if (engine->currentState == STATE::GAMEPLAY)
 	{
 		timeMonitor->setCaption(stringTime(engine->gameManager->gameplayTime));
@@ -112,6 +171,24 @@ void UIManager::buttonHit(OgreBites::Button *b) {
 		engine->loadLevel();
 		engine->soundManager->stopMusic(0); // Stop menu music
 		mTrayMgr->destroyWidget(b);
+	}
+
+	else if (b->getName() == "CreditsButton")
+	{
+		if (credits->isVisible())
+		{
+			credits->hide();
+		}
+		else
+		{
+			credits->setText(getCredits());
+			credits->show();
+		}
+	}
+
+	else if (b->getName() == "RestartButton")
+	{
+		engine->gameManager->restart();
 	}
 }
 

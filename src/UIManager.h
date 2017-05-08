@@ -29,6 +29,7 @@ public OgreBites::SdkTrayListener
 private:
 	void loadMenu();
 	std::string stringTime(float time);
+	std::string getCredits();
 
 protected:
 	virtual void windowResized(Ogre::RenderWindow *rw);
@@ -50,12 +51,20 @@ public:
 	virtual void init();
 	virtual void tick(float dt);
 	virtual void loadLevel();
+	virtual void loadWinScreen(bool win = false);
 	virtual void stop();
 
 	OgreBites::InputContext mInputContext;
 	OgreBites::SdkTrayManager* mTrayMgr;
 	Ogre::OverlaySystem* mOverlaySystem;
 	OgreBites::Label *timeMonitor;
+	OgreBites::Button *creditsButton;
+	OgreBites::Button* restartButton;
+	OgreBites::TextBox *credits;
+	OgreBites::Label* P1ScoreBox;
+	OgreBites::Label* P2ScoreBox;
+	bool playerOneWin;
+	bool playerTwoWin;
 };
 
 #endif /* INC_UIMGR_H_ */

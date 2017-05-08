@@ -33,6 +33,9 @@ public:
     void stop() override;
 
 	void loadMenu();
+	void loadSplashScreen();
+	void loadWinScreenPlayerOne();
+	void loadWinScreenPlayerTwo();
 
 	void testScene() const;
 
