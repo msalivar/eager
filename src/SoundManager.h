@@ -30,17 +30,21 @@ public:
 	void loadLevel();
 	void tick(float dt) override {}
 
-	static ALuint 	backgroundBuffer,   backgroundSource,
-              		idleBuffer,    	 	idleSource,
-              		idleBuffer2,		idleSource2,
-              		moveBuffer,     	moveSource,
-              		moveBuffer2,		moveSource2,
-              		shootBuffer,    	shootSource,
-              		shootBuffer2,		shootSource2;
+	static ALuint 	menuBuffer,   	menuSource,
+					musicBuffer1,	musicSource1,
+					musicBuffer2, 	musicSource2,
+					musicBuffer3, 	musicSource3,
+              		idleBuffer,    	idleSource,
+              		idleBuffer2,	idleSource2,
+              		moveBuffer,     moveSource,
+              		moveBuffer2,	moveSource2,
+              		shootBuffer,    shootSource,
+              		shootBuffer2,	shootSource2;
 
 	static ALenum error;
 
-	void playBackgroundSound();
+	void playMusic(int id);
+	void stopMusic(int id);
 
 	void playIdleSound();
 	void stopIdleSound();

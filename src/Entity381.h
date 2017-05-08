@@ -93,3 +93,10 @@ public:
 	Wall(Ogre::Vector3 pos, float heading);
 	~Wall();
 };
+
+class Tower : public Entity381
+{
+public:
+	Tower(Ogre::Vector3 pos, float heading);
+	~Tower();
+};

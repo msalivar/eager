@@ -55,6 +55,7 @@ void UIManager::tick(float dt) {
 		{
 			engine->currentState = STATE::MAIN_MENU;
 			engine->graphicsManager->loadMenu();
+			engine->soundManager->playMusic(0); // Play menu music
 			loadMenu();//Creates the button
 		}
 	}
@@ -109,6 +110,7 @@ void UIManager::buttonHit(OgreBites::Button *b) {
 		std::cout << "New Game pressed" << std::endl;
 		engine->currentState = STATE::GAMEPLAY;
 		engine->loadLevel();
+		engine->soundManager->stopMusic(0); // Stop menu music
 		mTrayMgr->destroyWidget(b);
 	}
 }
