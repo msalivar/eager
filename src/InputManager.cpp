@@ -143,7 +143,10 @@ void InputManager::windowClosed(Ogre::RenderWindow* rw)
 }
 
 bool InputManager::UpdateLocations(float dt)
-{
+{	if (keyboard->isKeyDown(OIS::KC_ESCAPE))
+	{
+		engine->stop();
+	}
 	if (engine->currentState != STATE::GAMEPLAY) { return true; }
 
 	float moveSpeed = 1;
