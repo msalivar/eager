@@ -67,11 +67,15 @@ void EntityManager::tick(float dt)
         }
 
         // Check entity bounds
-        if (entity->entityType == EntityType::BULLET ||
-            entity->entityType == EntityType::BLUETANK ||
+        if (entity->entityType == EntityType::BULLET)
+        {
+            HandleArenaBounds(entity, engine->gameManager->arenaSizeX, engine->gameManager->arenaSizeZ, dt);
+        }
+        if (entity->entityType == EntityType::BLUETANK ||
             entity->entityType == EntityType::REDTANK)
         {
             HandleArenaBounds(entity, engine->gameManager->arenaSizeX, engine->gameManager->arenaSizeZ, dt);
+            HandleTankLevelCollision(entity, dt);
         }
     }
 }
@@ -153,15 +157,15 @@ Entity381* EntityManager::CreateTower(Ogre::Vector3 position, float heading)
 {
     Entity381 *ent = 0;
     ent = new Tower(position, heading);
-    CreateOgreEntityAndNode(ent, 0.025);
+    CreateOgreEntityAndNode(ent, 20);
     entities.push_front(ent);
     return ent;
 }
 
-bool EntityManager::CheckForBulletCollision(Entity381* bullet, Entity381* object)
+bool EntityManager::CheckForCollision(Entity381* bullet, Entity381* object, float multiplier)
 {
     Ogre::Real distance = bullet->pos.distance(object->pos);
-    return distance <= object->ogreEntity->getBoundingRadius();
+    return distance <= object->ogreEntity->getBoundingRadius() * multiplier;
 }
 
 void EntityManager::HandleBulletState(Entity381* entity)
@@ -170,14 +174,24 @@ void EntityManager::HandleBulletState(Entity381* entity)
     if (entity->state == EntityState::ALIVE)
     {
         if (entity->owner == EntityType::REDTANK &&
-            CheckForBulletCollision(entity, engine->gameManager->blueTank))
+            CheckForCollision(entity, engine->gameManager->blueTank))
         {
             entity->state = EntityState::DESTROY;
         }
         else if (entity->owner == EntityType::BLUETANK &&
-            CheckForBulletCollision(entity, engine->gameManager->redTank))
+            CheckForCollision(entity, engine->gameManager->redTank))
         {
             entity->state = EntityState::DESTROY;
+        }        
+        // check level entities for collision
+        for (const auto& object : engine->gameManager->levelEntities)
+        {
+            // this multiplier is for towers only - temp fix
+            if (CheckForCollision(entity, object, 6))
+            {
+                entity->state = EntityState::DESTROY;
+                break;
+            }
         }
     }
     // Check for destroy flag
@@ -214,5 +228,20 @@ void EntityManager::HandleArenaBounds(Entity381* entity, int arenaSizeX, int are
             Ogre::Vector3 dirToMiddle = Ogre::Vector3(0, 0, 1) - entity->pos;
             entity->pos += dirToMiddle * dt;
         }
+    }
+}
+
+void EntityManager::HandleTankLevelCollision(Entity381* entity, float dt)
+{
+    for (const auto& object : engine->gameManager->levelEntities)
+    {
+        if (CheckForCollision(entity, object, 6))
+        {
+            entity->speed = 0;
+            entity->desiredSpeed = 0;
+            // Move tank out slowly
+            Ogre::Vector3 dir = entity->pos - object->pos;
+            entity->pos += dir * dt;
+        }        
     }
 }

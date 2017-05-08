@@ -118,6 +118,7 @@ void GameManager::loadObjects()
 
 void GameManager::createLevelOne()
 {
+	levelEntities.clear();
 	int buffer = 20;
 	int increment = 75;
 	arenaSizeX = 275;
@@ -160,6 +161,8 @@ void GameManager::createLevelOne()
 	ent = engine->entityManager->CreateWall(Ogre::Vector3(arenaSizeX - z, 0, -arenaSizeZ - buffer + 5), 1.5708f); z += increment;
 	ent = engine->entityManager->CreateWall(Ogre::Vector3(arenaSizeX - z, 0, -arenaSizeZ - buffer + 5), 1.5708f);
 	// towers
-	ent = engine->entityManager->CreateTower(Ogre::Vector3(100, 0, -50), 0);
-	ent = engine->entityManager->CreateTower(Ogre::Vector3(-100, 0, 50), 0);
+	ent = engine->entityManager->CreateTower(Ogre::Vector3(100, -5, -50), 0);
+	levelEntities.push_front(ent);
+	ent = engine->entityManager->CreateTower(Ogre::Vector3(-100, -5, 50), 0);
+	levelEntities.push_front(ent);
 }
