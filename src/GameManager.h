@@ -42,6 +42,9 @@ public:
 	Entity381* redTurret;
 	std::list<Entity381*> levelEntities;
 
+	int pOneScore;
+	int pTwoScore;
+
 	int arenaSizeX;
 	int arenaSizeZ;
 };

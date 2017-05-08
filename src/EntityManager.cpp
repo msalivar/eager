@@ -177,11 +177,17 @@ void EntityManager::HandleBulletState(Entity381* entity)
             CheckForCollision(entity, engine->gameManager->blueTank))
         {
             entity->state = EntityState::DESTROY;
+            engine->soundManager->playDestroySound();
+            engine->gameManager->pOneScore++;
+            // Check for win here
         }
         else if (entity->owner == EntityType::BLUETANK &&
             CheckForCollision(entity, engine->gameManager->redTank))
         {
             entity->state = EntityState::DESTROY;
+            engine->soundManager->playDestroySound();
+            engine->gameManager->pTwoScore++;
+            // Check for win here
         }        
         // check level entities for collision
         for (const auto& object : engine->gameManager->levelEntities)

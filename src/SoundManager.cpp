@@ -22,6 +22,10 @@ ALuint SoundMgr::shootBuffer;
 ALuint SoundMgr::shootBuffer2;
 ALuint SoundMgr::shootSource;
 ALuint SoundMgr::shootSource2;
+ALuint SoundMgr::destroyBuffer;
+ALuint SoundMgr::destroySource;
+ALuint SoundMgr::winBuffer;
+ALuint SoundMgr::winSource;
 
 SoundMgr::SoundMgr(Engine *eng): Manager(eng)
 {
@@ -80,6 +84,14 @@ void SoundMgr::init()
 	if((error = alutGetError()) != ALUT_ERROR_NO_ERROR)
 		fprintf(stderr, "ALUT Error: %s\n",alutGetErrorString(error));
 
+	destroyBuffer = alutCreateBufferFromFile("../assets/sounds/tankDestroyed.wav"); 
+	if((error = alutGetError()) != ALUT_ERROR_NO_ERROR)
+		fprintf(stderr, "ALUT Error: %s\n",alutGetErrorString(error));
+
+	winBuffer = alutCreateBufferFromFile("../assets/sounds/winMusic.wav"); 
+	if((error = alutGetError()) != ALUT_ERROR_NO_ERROR)
+		fprintf(stderr, "ALUT Error: %s\n",alutGetErrorString(error));
+
 	//Generate Sources
 	std::cout << "Generating sources" << std::endl;
 	alGenSources(1, &menuSource);
@@ -119,6 +131,14 @@ void SoundMgr::init()
 		fprintf(stderr, "ALUT Error: %s\n",alutGetErrorString(error));
 
 	alGenSources(1, &shootSource2);
+	if((error = alutGetError()) != ALUT_ERROR_NO_ERROR)
+		fprintf(stderr, "ALUT Error: %s\n",alutGetErrorString(error));
+
+	alGenSources(1, &destroySource);
+	if((error = alutGetError()) != ALUT_ERROR_NO_ERROR)
+		fprintf(stderr, "ALUT Error: %s\n",alutGetErrorString(error));
+
+	alGenSources(1, &winSource);
 	if((error = alutGetError()) != ALUT_ERROR_NO_ERROR)
 		fprintf(stderr, "ALUT Error: %s\n",alutGetErrorString(error));
 
@@ -164,6 +184,14 @@ void SoundMgr::init()
 	if((error = alutGetError()) != ALUT_ERROR_NO_ERROR)
 		fprintf(stderr, "ALUT Error: %s\n",alutGetErrorString(error));
 
+	alSourcei(destroySource, AL_BUFFER, destroyBuffer);
+	if((error = alutGetError()) != ALUT_ERROR_NO_ERROR)
+		fprintf(stderr, "ALUT Error: %s\n",alutGetErrorString(error));
+
+	alSourcei(winSource, AL_BUFFER, winBuffer);
+	if((error = alutGetError()) != ALUT_ERROR_NO_ERROR)
+		fprintf(stderr, "ALUT Error: %s\n",alutGetErrorString(error));
+
 	// Set source attributes
 	alSourcef(menuSource, AL_LOOPING, AL_TRUE);
 	alSourcef(idleSource, AL_LOOPING, AL_TRUE);
@@ -175,12 +203,14 @@ void SoundMgr::init()
 	alSourcef(musicSource1, AL_GAIN, 1.8f);
 	alSourcef(musicSource2, AL_GAIN, 1.8f);
 	alSourcef(musicSource3, AL_GAIN, 1.8f);
+	alSourcef(winSource, AL_GAIN, 1.8f);
 	alSourcef(idleSource, AL_GAIN, 0.7f);
 	alSourcef(idleSource2, AL_GAIN, 0.7f);
 	alSourcef(moveSource, AL_GAIN, 0.6f);
 	alSourcef(moveSource2, AL_GAIN, 0.6f);
 	alSourcef(shootSource, AL_GAIN, 0.9f);
 	alSourcef(shootSource2, AL_GAIN, 0.9f);
+	alSourcef(destroySource, AL_GAIN, 5.0f);
 }
 
 void SoundMgr::stop()
@@ -209,6 +239,9 @@ void SoundMgr::playMusic(int id)
 		case 3:
 			alSourcePlay(musicSource3);
 			break;
+		case 4:
+			alSourcePlay(winSource);
+			break;
 		default:
 			fprintf(stderr, "Bad music ID");
 			break;
@@ -232,6 +265,9 @@ void SoundMgr::stopMusic(int id)
 			break;
 		case 3:
 			alSourceStop(musicSource3);
+			break;
+		case 4:
+			alSourceStop(winSource);
 			break;
 		default:
 			fprintf(stderr, "Bad music ID");
@@ -309,4 +345,11 @@ void SoundMgr::playShootSoundPTwo()
 	alSourcePlay(shootSource2);
 	if((error = alutGetError()) != ALUT_ERROR_NO_ERROR)
 		fprintf(stderr, "ALUT Error - play shoot: %s\n",alutGetErrorString(error));
+}
+
+void SoundMgr::playDestroySound()
+{
+	alSourcePlay(destroySource);
+	if((error = alutGetError()) != ALUT_ERROR_NO_ERROR)
+		fprintf(stderr, "ALUT Error - play shoot: %s\n",alutGetErrorString(error));	
 }

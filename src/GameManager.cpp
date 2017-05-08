@@ -16,6 +16,8 @@ GameManager::GameManager(Engine *engine): Manager(engine)
 {
 	ocean = Ogre::Plane(Ogre::Vector3::UNIT_Y, 0);
 	gameplayTime = 0;
+	pOneScore = 0;
+	pTwoScore = 0;
 }
 
 GameManager::~GameManager()

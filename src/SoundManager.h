@@ -39,7 +39,9 @@ public:
               		moveBuffer,     moveSource,
               		moveBuffer2,	moveSource2,
               		shootBuffer,    shootSource,
-              		shootBuffer2,	shootSource2;
+              		shootBuffer2,	shootSource2,
+              		destroyBuffer,	destroySource,
+              		winBuffer,		winSource;
 
 	static ALenum error;
 
@@ -48,15 +50,18 @@ public:
 
 	void playIdleSound();
 	void stopIdleSound();
+
 	void playIdleSoundPTwo();
 	void stopIdleSoundPTwo();
 
 	void playMoveSound();
 	void stopMoveSound();
+
 	void playMoveSoundPTwo();
 	void stopMoveSoundPTwo();
 
 	void playShootSound();
 	void playShootSoundPTwo();
 
+	void playDestroySound();
 };
