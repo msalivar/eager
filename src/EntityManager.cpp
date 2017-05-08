@@ -180,36 +180,36 @@ void EntityManager::HandleBulletState(Entity381* entity)
             entity->state = EntityState::DESTROY;
             engine->soundManager->playDestroySound();
             engine->gameManager->pTwoScore++;
-			// Check for win here
-			if (engine->gameManager->pTwoScore >= 3)
-			{
-				engine->currentState = STATE::WIN_SCREEN;
-				engine->uiManager->loadWinScreen(2);
-		    }
+		// Check for win here
+		if (engine->gameManager->pTwoScore >= 3 && engine->currentState != STATE::WIN_SCREEN)
+		{
+			engine->currentState = STATE::WIN_SCREEN;
+			engine->uiManager->loadWinScreen(2);
 		}
-        else if (entity->owner == EntityType::BLUETANK &&
-            CheckForCollision(entity, engine->gameManager->redTank))
+	}
+    else if (entity->owner == EntityType::BLUETANK &&
+        CheckForCollision(entity, engine->gameManager->redTank))
+    {
+        entity->state = EntityState::DESTROY;
+        engine->soundManager->playDestroySound();
+        engine->gameManager->pOneScore++;
+        // Check for win here
+		if (engine->gameManager->pOneScore >= 3 && engine->currentState != STATE::WIN_SCREEN)
+		{
+			engine->currentState = STATE::WIN_SCREEN;
+			engine->uiManager->loadWinScreen(1);
+		}
+    }        
+    // check level entities for collision
+    for (const auto& object : engine->gameManager->levelEntities)
+    {
+        // this multiplier is for towers only - temp fix
+        if (CheckForCollision(entity, object, 6))
         {
             entity->state = EntityState::DESTROY;
-            engine->soundManager->playDestroySound();
-            engine->gameManager->pOneScore++;
-            // Check for win here
-			if (engine->gameManager->pOneScore >= 3)
-			{
-				engine->currentState = STATE::WIN_SCREEN;
-				engine->uiManager->loadWinScreen(1);
-		    }
-        }        
-        // check level entities for collision
-        for (const auto& object : engine->gameManager->levelEntities)
-        {
-            // this multiplier is for towers only - temp fix
-            if (CheckForCollision(entity, object, 6))
-            {
-                entity->state = EntityState::DESTROY;
-                break;
-            }
+            break;
         }
+    }
     }
     // Check for destroy flag
     if (entity->state == EntityState::DESTROY)
