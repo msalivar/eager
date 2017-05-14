@@ -168,8 +168,8 @@ void UIManager::buttonHit(OgreBites::Button *b) {
 	{
 		std::cout << "New Game pressed" << std::endl;
 		engine->currentState = STATE::GAMEPLAY;
+		engine->soundManager->stopMusic(); // Stop menu music
 		engine->loadLevel();
-		engine->soundManager->stopMusic(0); // Stop menu music
 		mTrayMgr->destroyWidget(b);
 	}
 
@@ -188,6 +188,7 @@ void UIManager::buttonHit(OgreBites::Button *b) {
 
 	else if (b->getName() == "RestartButton")
 	{
+		engine->soundManager->stopMusic(); // Stop win music
 		engine->gameManager->restart();
 		mTrayMgr->destroyWidget(b);
 		mTrayMgr->destroyWidget(creditsButton);

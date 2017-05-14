@@ -99,6 +99,7 @@ void InputManager::tick(float dt)
 	mouse->capture();
 	if (keyboard->isKeyDown(OIS::KC_ESCAPE))
 	{
+		std::cout << "Escape Pressed." << std::endl;
 		engine->stop();
 	}
 
@@ -152,7 +153,7 @@ bool InputManager::UpdateLocations(float dt)
 	float moveSpeed = 1;
 	float slowSpeed = 2;
 	float turnSpeed = 0.02f;
-	float aimSpeed = 0.04f;
+	float aimSpeed = 0.045f;
 
 	pOneMoveTimer -= dt;
 	pOneTurnTimer -= dt;

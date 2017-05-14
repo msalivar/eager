@@ -1,5 +1,6 @@
 #include "SoundManager.h"
 #include "Engine.h"
+#include <string>
 
 ALenum SoundMgr::error;
 ALuint SoundMgr::menuBuffer;
@@ -225,6 +226,7 @@ void SoundMgr::loadLevel()
 
 void SoundMgr::playMusic(int id)
 {
+	std::cout << "Playing music: " + std::to_string(id) << std::endl;
 	switch (id)
 	{
 		case 0:
@@ -250,29 +252,14 @@ void SoundMgr::playMusic(int id)
 		fprintf(stderr, "ALUT Error - play music: %s\n",alutGetErrorString(error));
 }
 
-void SoundMgr::stopMusic(int id)
+void SoundMgr::stopMusic()
 {
-	switch (id)
-	{
-		case 0:
-			alSourceStop(menuSource);
-			break;
-		case 1:
-			alSourceStop(musicSource1);
-			break;
-		case 2:
-			alSourceStop(musicSource2);
-			break;
-		case 3:
-			alSourceStop(musicSource3);
-			break;
-		case 4:
-			alSourceStop(winSource);
-			break;
-		default:
-			fprintf(stderr, "Bad music ID");
-			break;
-	}
+	std::cout << "Stopping all music" << std::endl;
+	alSourceStop(menuSource);
+	alSourceStop(musicSource1);
+	alSourceStop(musicSource2);
+	alSourceStop(musicSource3);
+	alSourceStop(winSource);
 	if((error = alutGetError()) != ALUT_ERROR_NO_ERROR)
 		fprintf(stderr, "ALUT Error - stop music: %s\n",alutGetErrorString(error));
 }

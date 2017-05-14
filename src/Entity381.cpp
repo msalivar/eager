@@ -68,10 +68,10 @@ void Entity381::Tick(float dt)
 
 void Entity381::DefaultInit()
 {
-	this->acceleration = 8.0f;
-	this->deceleration = 14.0f;
-	this->reverseAcceleration = 5.0f;
-	this->turnRate = 0.2f;
+	this->acceleration = 12.0f;
+	this->deceleration = 10.0f;
+	this->reverseAcceleration = 8.0f;
+	this->turnRate = 0.3f;
 
 	this->maxSpeed = 35.0f;
 	this->minSpeed = -30.0f;

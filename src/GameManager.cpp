@@ -42,7 +42,7 @@ void GameManager::loadLevel()
 
 	/* initialize random seed: */
 	srand (time(NULL));
-	/* generate secret number between 1 and 10: */
+	/* generate random number between 1 and 3: */
 	int num = rand() % 3 + 1;
 	engine->soundManager->playMusic(num);
 
@@ -135,7 +135,7 @@ void GameManager::restart()
     redTank->heading = 0;
 	redTurret->heading = 0;
     
-    // some serious stuff going on here
+    // delete all bullets
     for (const auto& entity : engine->entityManager->entities)
     {
         if (entity->entityType == EntityType::BULLET
@@ -153,6 +153,11 @@ void GameManager::restart()
         }
     }
 	engine->currentState = STATE::GAMEPLAY;
+	/* initialize random seed: */
+	srand (time(NULL));
+	/* generate random number between 1 and 3: */
+	int num = rand() % 3 + 1;
+	engine->soundManager->playMusic(num);
 }
 
 void GameManager::createLevelOne()

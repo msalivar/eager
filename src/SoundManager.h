@@ -46,7 +46,7 @@ public:
 	static ALenum error;
 
 	void playMusic(int id);
-	void stopMusic(int id);
+	void stopMusic();
 
 	void playIdleSound();
 	void stopIdleSound();

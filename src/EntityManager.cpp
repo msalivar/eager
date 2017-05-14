@@ -185,6 +185,8 @@ void EntityManager::HandleBulletState(Entity381* entity)
 		{
 			engine->currentState = STATE::WIN_SCREEN;
 			engine->uiManager->loadWinScreen(2);
+            engine->soundManager->stopMusic();
+            engine->soundManager->playMusic(4);
 		}
 	}
     else if (entity->owner == EntityType::BLUETANK &&
@@ -198,6 +200,8 @@ void EntityManager::HandleBulletState(Entity381* entity)
 		{
 			engine->currentState = STATE::WIN_SCREEN;
 			engine->uiManager->loadWinScreen(1);
+            engine->soundManager->stopMusic();
+            engine->soundManager->playMusic(4);
 		}
     }        
     // check level entities for collision
