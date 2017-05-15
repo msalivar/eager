@@ -55,8 +55,12 @@ public:
 	Ogre::SceneNode* backgroundNode;
 	Ogre::SceneNode* splashNode;
 
+	void createExplosion(Ogre::Vector3 pos);
 
 private:
+
+	static int explosionId;
+
 	void loadConfig(Ogre::ConfigFile cf) const;
 	void configureRenderSystem() const;
     void initResources();

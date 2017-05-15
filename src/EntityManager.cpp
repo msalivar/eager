@@ -21,7 +21,6 @@ EntityManager::~EntityManager()
         for (const auto& aspect : entity->aspects)
         {
             delete aspect;
-            aspect = nullptr;
         }
         entity->aspects.clear();
         entity->ogreEntity = nullptr;
@@ -196,6 +195,10 @@ void EntityManager::HandleBulletState(Entity381* entity)
     {
         entity->state = EntityState::DESTROY;
         engine->soundManager->playDestroySound();
+        
+        // explosion particle effect
+        engine->graphicsManager->createExplosion(entity->pos);
+
         engine->gameManager->pTwoScore++;
     	// Check for win here
     	if (engine->gameManager->pTwoScore >= 3 && engine->currentState != STATE::WIN_SCREEN)
@@ -211,6 +214,10 @@ void EntityManager::HandleBulletState(Entity381* entity)
     {
         entity->state = EntityState::DESTROY;
         engine->soundManager->playDestroySound();
+
+        // explosion particle effect
+        engine->graphicsManager->createExplosion(entity->pos);
+
         engine->gameManager->pOneScore++;
         // Check for win here
 		if (engine->gameManager->pOneScore >= 3 && engine->currentState != STATE::WIN_SCREEN)
@@ -263,7 +270,7 @@ void EntityManager::HandleArenaBounds(Entity381* entity, int arenaSizeX, int are
             entity->desiredSpeed = 0;
             // Move tank towards middle slowly
             Ogre::Vector3 dirToMiddle = Ogre::Vector3(0, 0, 1) - entity->pos;
-            entity->pos += dirToMiddle * dt;
+            entity->pos += dirToMiddle * dt * 0.5f;
         }
     }
 }

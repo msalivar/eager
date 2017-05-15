@@ -10,10 +10,10 @@ particle_system explosionTemplate
  
 	emitter Point
 	{
-	   angle           180
-	   duration	   1    // This controls the duration of the emitter in seconds (1 second)
-    	   emission_rate   1    // This controls how many particles are emitted per second - just 1
-    	   time_to_live    1   	// Each particle lives this many seconds - just 1 second
+	   angle           	180
+	   duration			1    	// This controls the duration of the emitter in seconds (1 second)
+	   emission_rate   	3    	// This controls how many particles are emitted per second - just 1
+	   time_to_live    	1   	// Each particle lives this many seconds - just 1 second
 	}
  
    	affector ColourFader

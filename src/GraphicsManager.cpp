@@ -8,6 +8,8 @@
 #include "GraphicsManager.h"
 #include "Engine.h"
 
+int GraphicsManager::explosionId = 0;
+
 GraphicsManager::GraphicsManager(Engine *eng): Manager(eng)
 {
 	rect = NULL;
@@ -121,6 +123,21 @@ void GraphicsManager::testScene() const
 	Ogre::Light* light = ogreSceneManager->createLight("MainLight");
 	light->setPosition(20, 80, 50);
 	std::cout << "Test scene done" << std::endl;
+}
+
+void GraphicsManager::createExplosion(Ogre::Vector3 pos)
+{
+	// create a particle system named explosions using the explosionTemplate
+    Ogre::ParticleSystem* particleSystem = ogreSceneManager->createParticleSystem(std::to_string(explosionId), "explosionTemplate");
+    explosionId++;
+     
+    // fast forward to the point where the particle has been emitted
+    particleSystem->fastForward(2.4);
+    
+    // attach the particle system to a scene node    
+	Ogre::Vector3 vec = pos;
+	vec.y += 5;
+	ogreSceneManager->getRootSceneNode()->createChildSceneNode(vec)->attachObject(particleSystem);
 }
 
 GraphicsManager::~GraphicsManager()
