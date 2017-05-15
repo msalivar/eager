@@ -30,6 +30,7 @@ private:
 	void loadMenu();
 	std::string stringTime(float time);
 	std::string getCredits();
+	std::string getControls();
 
 protected:
 	virtual void windowResized(Ogre::RenderWindow *rw);
@@ -63,6 +64,9 @@ public:
 	OgreBites::TextBox *credits;
 	OgreBites::Label* P1ScoreBox;
 	OgreBites::Label* P2ScoreBox;
+	OgreBites::Button *controlsButton;
+	OgreBites::TextBox *controls;
+
 	bool playerOneWin;
 	bool playerTwoWin;
 };

@@ -17,6 +17,8 @@ UIManager::UIManager(Engine* eng) : Manager(eng) {
 	timeMonitor = 0;
 	creditsButton = 0;
 	credits = 0;
+	controlsButton = 0;
+	controls = 0;
 
 	//Ogre::WindowEventUtilities::addWindowEventListener(engine->gfxMgr->ogreRenderWindow, this);
 }
@@ -40,13 +42,9 @@ void UIManager::stop() {
 
 void UIManager::loadLevel() {
 	mTrayMgr->hideCursor();
-	//mTrayMgr->createButton(OgreBites::TL_TOPLEFT, "MyButton", "Click Me!");
-	//mTrayMgr->createLongSelectMenu(OgreBites::TL_TOPRIGHT, "MyMenu", "Menu", 100, 20, 10);
 
 	P1ScoreBox = mTrayMgr->createLabel(OgreBites::TL_TOPLEFT, "P1ScoreBox", "Player 1 Score: ", 240);
 	P2ScoreBox = mTrayMgr->createLabel(OgreBites::TL_TOPRIGHT, "P2ScoreBox", "Player 2 Score: ", 240);
-
-	//timeMonitor = mTrayMgr->createLabel(OgreBites::TL_TOPLEFT, "Timer", stringTime(engine->gameManager->gameplayTime));
 }
 
 void UIManager::loadWinScreen(int id)
@@ -76,8 +74,8 @@ void UIManager::loadWinScreen(int id)
 	credits->getOverlayElement()->setPosition(width - 300, height - 50 - 600);
 	credits->setText(getCredits());
 
-	//credits->hide();
-	//credits->setText(getCredits());
+	credits->hide();
+	credits->setText(getCredits());
 
 	// Restart Button
 	restartButton = mTrayMgr->createButton(OgreBites::TL_CENTER, "RestartButton", "Restart", 240);
@@ -117,12 +115,6 @@ void UIManager::tick(float dt) {
 	{
 		//loadWinScreen();
 	}
-
-	/*else if (engine->currentState == STATE::GAMEPLAY)
-	{
-		timeMonitor->setCaption(stringTime(engine->gameManager->gameplayTime));
-		std::cout << stringTime(engine->gameManager->gameplayTime) << std::endl;
-	}*/
 }
 
 void UIManager::windowResized(Ogre::RenderWindow* rw) {
@@ -171,6 +163,10 @@ void UIManager::buttonHit(OgreBites::Button *b) {
 		engine->soundManager->stopMusic(); // Stop menu music
 		engine->loadLevel();
 		mTrayMgr->destroyWidget(b);
+		mTrayMgr->destroyWidget(controls);
+		mTrayMgr->destroyWidget(controlsButton);
+		controlsButton = NULL;
+		controls = NULL;
 	}
 
 	else if (b->getName() == "CreditsButton")
@@ -194,6 +190,19 @@ void UIManager::buttonHit(OgreBites::Button *b) {
 		mTrayMgr->destroyWidget(creditsButton);
 		mTrayMgr->destroyWidget(credits);		
 	}
+
+	else if (b->getName() == "ControlButton")
+	{
+		if (controls->isVisible())
+		{
+			controls->hide();
+		}
+		else
+		{
+			controls->setText(getControls());
+			controls->show();
+		}
+	}
 }
 
 void UIManager::itemSelected(OgreBites::SelectMenu *m) {
@@ -206,6 +215,11 @@ void UIManager::itemSelected(OgreBites::SelectMenu *m) {
 void UIManager::loadMenu()
 {
 	mTrayMgr->createButton(OgreBites::TL_BOTTOMRIGHT, "NewGame", "New Game");
+	controlsButton = mTrayMgr->createButton(OgreBites::TL_BOTTOMLEFT, "ControlButton", "Controls");
+	controls = mTrayMgr->createTextBox(OgreBites::TL_NONE, "Controls", "Controls", 300, 200);
+	controls->getOverlayElement()->setPosition(0, 450);
+	controls->setText(getControls());
+	controls->hide();
 }
 
 std::string UIManager::stringTime(float time)
@@ -226,4 +240,9 @@ std::string UIManager::stringTime(float time)
 	result += std::string(seconds);
 	*/
 	return result;
+}
+
+std::string UIManager::getControls()
+{
+	return "Player 1:\n WASD: Move Tank\nG/J: Move Turret\nY: Shoot\n\nPlayer 2:\nArrow Keys: Move Tank\nNum 4/Num 6: Move Turret\nNum 8: Shoot";
 }
