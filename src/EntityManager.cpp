@@ -16,7 +16,18 @@ EntityManager::EntityManager(Engine *eng) : Manager(eng)
 
 EntityManager::~EntityManager()
 {
-    entities.clear();
+    for (const auto& entity : entities)
+    {
+        for (const auto& aspect : entity->aspects)
+        {
+            delete aspect;
+            aspect = nullptr;
+        }
+        entity->aspects.clear();
+        entity->ogreEntity = nullptr;
+        entity->ogreSceneNode = nullptr;
+        delete entity;
+    }
 }
 
 void EntityManager::tick(float dt)
@@ -91,6 +102,7 @@ void EntityManager::loadLevel()
 
 void EntityManager::stop()
 {
+
 }
 
 void EntityManager::CreateOgreEntityAndNode(Entity381 *ent, float scale)
@@ -166,31 +178,36 @@ Entity381* EntityManager::CreateTower(Ogre::Vector3 position, float heading)
 bool EntityManager::CheckForCollision(Entity381* bullet, Entity381* object, float multiplier)
 {
     Ogre::Real distance = bullet->pos.distance(object->pos);
-    return distance <= object->ogreEntity->getBoundingRadius() * multiplier;
+    if (distance <= object->ogreEntity->getBoundingRadius() * multiplier)
+    {        
+        std::cout << "Comparing bullet: " + std::to_string(distance) + 
+        ", object: " + std::to_string(object->ogreEntity->getBoundingRadius()) << std::endl;
+        return true;
+    }
+    else { return false; }
 }
 
 void EntityManager::HandleBulletState(Entity381* entity)
 {
     // Check for bullet collision
-    if (entity->state == EntityState::ALIVE)
+    if (entity->state != EntityState::ALIVE) { return; }
+    if (entity->owner == EntityType::REDTANK &&
+        CheckForCollision(entity, engine->gameManager->blueTank, 0.9f))
     {
-        if (entity->owner == EntityType::REDTANK &&
-            CheckForCollision(entity, engine->gameManager->blueTank))
-        {
-            entity->state = EntityState::DESTROY;
-            engine->soundManager->playDestroySound();
-            engine->gameManager->pTwoScore++;
-		// Check for win here
-		if (engine->gameManager->pTwoScore >= 3 && engine->currentState != STATE::WIN_SCREEN)
-		{
-			engine->currentState = STATE::WIN_SCREEN;
-			engine->uiManager->loadWinScreen(2);
+        entity->state = EntityState::DESTROY;
+        engine->soundManager->playDestroySound();
+        engine->gameManager->pTwoScore++;
+    	// Check for win here
+    	if (engine->gameManager->pTwoScore >= 3 && engine->currentState != STATE::WIN_SCREEN)
+    	{
+    		engine->currentState = STATE::WIN_SCREEN;
+    		engine->uiManager->loadWinScreen(2);
             engine->soundManager->stopMusic();
             engine->soundManager->playMusic(4);
-		}
-	}
+    	}
+    }
     else if (entity->owner == EntityType::BLUETANK &&
-        CheckForCollision(entity, engine->gameManager->redTank))
+        CheckForCollision(entity, engine->gameManager->redTank, 0.9f))
     {
         entity->state = EntityState::DESTROY;
         engine->soundManager->playDestroySound();
@@ -213,7 +230,6 @@ void EntityManager::HandleBulletState(Entity381* entity)
             entity->state = EntityState::DESTROY;
             break;
         }
-    }
     }
     // Check for destroy flag
     if (entity->state == EntityState::DESTROY)
