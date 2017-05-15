@@ -38,13 +38,21 @@ void GameManager::loadLevel()
 	createGround();
 	createSky();
 	createEnts();
-	createLevelOne();
+	createArena();
 
 	/* initialize random seed: */
 	srand (time(NULL));
+
 	/* generate random number between 1 and 3: */
 	int num = rand() % 3 + 1;
 	engine->soundManager->playMusic(num);
+
+	/* generate random number between 1 and 3: */
+	createLevelThree();
+	// num = rand() % 3 + 1;
+	// if (num == 1) { createLevelOne(); }
+	// else if (num == 2) { createLevelTwo(); }
+	// else if (num == 3) { createLevelThree(); }
 
 	this->loadObjects();
 }
@@ -158,11 +166,16 @@ void GameManager::restart()
 	/* generate random number between 1 and 3: */
 	int num = rand() % 3 + 1;
 	engine->soundManager->playMusic(num);
+	// make random level
+	clearLevel();
+	num = rand() % 3 + 1;
+	if (num == 1) { createLevelOne(); }
+	else if (num == 2) { createLevelTwo(); }
+	else if (num == 3) { createLevelThree(); }
 }
 
-void GameManager::createLevelOne()
+void GameManager::createArena()
 {
-	levelEntities.clear();
 	int buffer = 20;
 	int increment = 75;
 	arenaSizeX = 275;
@@ -203,10 +216,58 @@ void GameManager::createLevelOne()
 	ent = engine->entityManager->CreateWall(Ogre::Vector3(arenaSizeX - z, 0, -arenaSizeZ - buffer + 5), 1.5708f); z += increment;
 	ent = engine->entityManager->CreateWall(Ogre::Vector3(arenaSizeX - z, 0, -arenaSizeZ - buffer + 5), 1.5708f); z += increment;
 	ent = engine->entityManager->CreateWall(Ogre::Vector3(arenaSizeX - z, 0, -arenaSizeZ - buffer + 5), 1.5708f); z += increment;
-	ent = engine->entityManager->CreateWall(Ogre::Vector3(arenaSizeX - z, 0, -arenaSizeZ - buffer + 5), 1.5708f);
+	ent = engine->entityManager->CreateWall(Ogre::Vector3(arenaSizeX - z, 0, -arenaSizeZ - buffer + 5), 1.5708f);	
+}
+
+void GameManager::clearLevel()
+{
+	for (const auto& entity : levelEntities)
+    {
+        entity->aspects.clear();
+        engine->graphicsManager->ogreSceneManager->destroyEntity(entity->ogreEntity);
+        entity->ogreEntity = nullptr;
+        entity->ogreSceneNode = nullptr;
+        entity->state = EntityState::DEAD;
+    }
+	levelEntities.clear();
+}
+
+void GameManager::createLevelOne()
+{
+	Entity381 *ent;
 	// towers
 	ent = engine->entityManager->CreateTower(Ogre::Vector3(100, -5, -50), 0);
 	levelEntities.push_front(ent);
 	ent = engine->entityManager->CreateTower(Ogre::Vector3(-100, -5, 50), 0);
+	levelEntities.push_front(ent);
+}
+
+void GameManager::createLevelTwo()
+{
+	Entity381 *ent;
+	ent = engine->entityManager->CreateTower(Ogre::Vector3(150, -5, 0), 0);
+	levelEntities.push_front(ent);
+	ent = engine->entityManager->CreateTower(Ogre::Vector3(-150, -5, 0), 0);
+	levelEntities.push_front(ent);
+	ent = engine->entityManager->CreateTower(Ogre::Vector3(0, -5, 100), 0);
+	levelEntities.push_front(ent);
+	ent = engine->entityManager->CreateTower(Ogre::Vector3(0, -5, -100), 0);
+	levelEntities.push_front(ent);
+}
+
+void GameManager::createLevelThree()
+{
+	Entity381 *ent;
+	ent = engine->entityManager->CreateTower(Ogre::Vector3(0, -5, 170), 0);
+	levelEntities.push_front(ent);
+	ent = engine->entityManager->CreateTower(Ogre::Vector3(0, -5, 60), 0);
+	levelEntities.push_front(ent);
+	ent = engine->entityManager->CreateTower(Ogre::Vector3(0, -5, -60), 0);
+	levelEntities.push_front(ent);
+	ent = engine->entityManager->CreateTower(Ogre::Vector3(0, -5, -170), 0);
+	levelEntities.push_front(ent);
+	ent = engine->entityManager->CreateTower(Ogre::Vector3(160, -5, 0), 0);
+	levelEntities.push_front(ent);
+	ent = engine->entityManager->CreateTower(Ogre::Vector3(-160, -5, 0), 0);
 	levelEntities.push_front(ent);
 }

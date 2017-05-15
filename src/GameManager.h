@@ -20,7 +20,11 @@ private:
 	void createEnts();
 	void createSky();
 	void createGround();
-	void createLevelOne();	
+	void createArena();
+	void createLevelOne();
+	void createLevelTwo();
+	void createLevelThree();
+	void clearLevel();
 
 public:
     explicit GameManager(Engine *engine);

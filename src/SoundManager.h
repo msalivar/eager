@@ -64,4 +64,6 @@ public:
 	void playShootSoundPTwo();
 
 	void playDestroySound();
+
+	void stopTankSounds();
 };

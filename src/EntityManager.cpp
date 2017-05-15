@@ -206,6 +206,7 @@ void EntityManager::HandleBulletState(Entity381* entity)
     		engine->currentState = STATE::WIN_SCREEN;
     		engine->uiManager->loadWinScreen(2);
             engine->soundManager->stopMusic();
+            engine->soundManager->stopTankSounds();
             engine->soundManager->playMusic(4);
     	}
     }
@@ -225,6 +226,7 @@ void EntityManager::HandleBulletState(Entity381* entity)
 			engine->currentState = STATE::WIN_SCREEN;
 			engine->uiManager->loadWinScreen(1);
             engine->soundManager->stopMusic();
+            engine->soundManager->stopTankSounds();
             engine->soundManager->playMusic(4);
 		}
     }        

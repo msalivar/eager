@@ -340,3 +340,13 @@ void SoundMgr::playDestroySound()
 	if((error = alutGetError()) != ALUT_ERROR_NO_ERROR)
 		fprintf(stderr, "ALUT Error - play shoot: %s\n",alutGetErrorString(error));	
 }
+
+void SoundMgr::stopTankSounds()
+{	
+	alSourceStop(idleSource);
+	alSourceStop(idleSource2);
+	alSourceStop(moveSource);
+	alSourceStop(moveSource2);
+	if((error = alutGetError()) != ALUT_ERROR_NO_ERROR)
+		fprintf(stderr, "ALUT Error - play shoot: %s\n",alutGetErrorString(error));	
+}
