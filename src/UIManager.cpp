@@ -216,10 +216,12 @@ void UIManager::loadMenu()
 {
 	mTrayMgr->createButton(OgreBites::TL_BOTTOMRIGHT, "NewGame", "New Game");
 	controlsButton = mTrayMgr->createButton(OgreBites::TL_BOTTOMLEFT, "ControlButton", "Controls");
-	controls = mTrayMgr->createTextBox(OgreBites::TL_NONE, "Controls", "Controls", 300, 200);
+	controls = mTrayMgr->createTextBox(OgreBites::TL_NONE, "Controls", "Controls", 300, 550);
 	controls->getOverlayElement()->setPosition(0, 450);
 	controls->setText(getControls());
+
 	controls->hide();
+	controls->setText(getControls());
 }
 
 std::string UIManager::stringTime(float time)
@@ -244,5 +246,5 @@ std::string UIManager::stringTime(float time)
 
 std::string UIManager::getControls()
 {
-	return "Player 1:\n WASD: Move Tank\nG/J: Move Turret\nY: Shoot\n\nPlayer 2:\nArrow Keys: Move Tank\nNum 4/Num 6: Move Turret\nNum 8: Shoot";
+	return "Player 1:\nWASD: Move Tank\nG/J: Move Turret\nY: Shoot\n\nPlayer 2:\nArrow Keys: Move Tank\nNum 4/Num 6: Move Turret\nNum 8: Shoot";
 }
